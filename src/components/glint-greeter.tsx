@@ -11,18 +11,18 @@ const SCRIPTS = [
 ];
 const LINE_MS = 2800;
 const HIDDEN_MS = 9000;
-const BOTTOM = 24; // px from the bottom of the screen (matches bottom-6)
-const MIN = 170;
-const MAX = 250;
+const MIN = 290;
+const MAX = 380;
+/** Share of Glint's box that sinks below the bottom of the screen (the base bleeds off). */
+const SINK = 0.28;
 
 /** As big as the empty corner under the right rail allows, so Glint never covers it. */
 function sizeFor() {
   const rail = document.querySelector<HTMLElement>("[data-rail-content]");
   const railVisible = rail && rail.getClientRects().length > 0;
-  const free = railVisible
-    ? window.innerHeight - rail.getBoundingClientRect().bottom - BOTTOM - 20
-    : window.innerHeight * 0.3;
-  return Math.round(Math.min(MAX, Math.max(MIN, free)));
+  const free = railVisible ? window.innerHeight - rail.getBoundingClientRect().bottom - 16 : window.innerHeight * 0.34;
+  // Only the part above the screen edge needs to fit in the free corner.
+  return Math.round(Math.min(MAX, Math.max(MIN, free / (1 - SINK))));
 }
 
 /**
@@ -72,7 +72,10 @@ export function GlintGreeter({ count }: { count: number }) {
   return (
     // Fixed to the viewport. Glint sits partly past the right edge, so the screen edge itself
     // cuts it off (fixed boxes never add page scroll). Nothing else clips it.
-    <div className="pointer-events-none fixed right-0 bottom-6 z-40 hidden md:block" style={{ width: SIZE, height: SIZE }}>
+    <div
+      className="pointer-events-none fixed right-0 z-40 hidden md:block"
+      style={{ width: SIZE, height: SIZE, bottom: -SIZE * SINK }}
+    >
       <AnimatePresence>
         {visible && (
           <motion.div
@@ -116,7 +119,7 @@ export function GlintGreeter({ count }: { count: number }) {
             exit={{ opacity: 0, x: 6, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 26 }}
             // Anchored to where the tilted head lands, so the tail touches Glint.
-            style={{ right: SIZE * 0.66, bottom: SIZE * 0.46 }}
+            style={{ right: SIZE * 0.66, bottom: SIZE * (SINK + 0.36) }}
             className="pointer-events-auto absolute w-40 origin-right rounded-2xl border bg-card px-3 py-2 text-[13px] leading-snug text-card-foreground shadow-xl"
           >
             {text}
