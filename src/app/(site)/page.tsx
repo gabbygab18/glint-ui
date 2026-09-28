@@ -1,6 +1,8 @@
 import { ArrowUpRight, Box, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "lucide-react";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { Cta } from "@/components/cta";
+import { STACK } from "@/components/stack-logos";
 import { Hero } from "@/components/hero";
 import { CATEGORIES, inCategory, registry } from "@/registry";
 import { GlowBorder } from "@/registry/items/glow-border/glow-border";
@@ -10,8 +12,6 @@ import { TiltCard } from "@/registry/items/tilt-card/tilt-card";
 import { SITE_URL } from "@/lib/site";
 
 const icons = { type: Type, sparkles: Sparkles, layers: Layers, layout: LayoutGrid, pointer: MousePointerClick, zap: Zap, box: Box, smile: Smile };
-
-const stack = ["React 19", "Next.js", "Tailwind CSS v4", "shadcn CLI", "TypeScript", "Motion", "GSAP", "WebGL"];
 
 const features = [
   { title: "Copy, paste, own it", body: "One file per component. No package, no version lock, no wrapper API to learn." },
@@ -29,9 +29,24 @@ export default function Home() {
         <Marquee
           speed={40}
           gap={56}
-          items={stack.map((s) => (
-            <span key={s} className="font-display text-xl font-semibold text-muted-foreground">
-              {s}
+          items={STACK.map((s) => (
+            <span
+              key={s.name}
+              className="group flex items-center gap-3 text-muted-foreground transition-colors hover:text-[var(--brand)]"
+              style={{ "--brand": s.color ?? "var(--foreground)" } as CSSProperties}
+            >
+              {s.path ? (
+                <svg viewBox="0 0 24 24" aria-hidden className="size-7 fill-current">
+                  <path d={s.path} />
+                </svg>
+              ) : s.name === "WebGL" ? (
+                <Box aria-hidden className="size-7" strokeWidth={1.75} />
+              ) : (
+                <span aria-hidden className="grid size-7 place-items-center rounded-md bg-current">
+                  <span className="font-display text-sm font-black text-background">M</span>
+                </span>
+              )}
+              <span className="font-display text-xl font-semibold">{s.name}</span>
             </span>
           ))}
         />
