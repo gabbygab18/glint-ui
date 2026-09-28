@@ -1,15 +1,14 @@
 import { ArrowUpRight, Box, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "lucide-react";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { Cta } from "@/components/cta";
-import { STACK } from "@/components/stack-logos";
+import { stackLogos } from "@/components/stack-logo";
 import { Hero } from "@/components/hero";
 import { CATEGORIES, inCategory, registry } from "@/registry";
 import { GlowBorder } from "@/registry/items/glow-border/glow-border";
 import { Marquee } from "@/registry/items/marquee/marquee";
 import { SpotlightCard } from "@/registry/items/spotlight-card/spotlight-card";
 import { TiltCard } from "@/registry/items/tilt-card/tilt-card";
-import { SITE_URL } from "@/lib/site";
+import { installCommand } from "@/lib/site";
 
 const icons = { type: Type, sparkles: Sparkles, layers: Layers, layout: LayoutGrid, pointer: MousePointerClick, zap: Zap, box: Box, smile: Smile };
 
@@ -23,33 +22,10 @@ const features = [
 export default function Home() {
   return (
     <main>
-      <Hero count={registry.length} installCmd={`npx shadcn@latest add ${SITE_URL}/r/split-text.json`} />
+      <Hero count={registry.length} installCmd={installCommand("split-text")} />
 
       <section aria-label="Built with" className="border-b py-8">
-        <Marquee
-          speed={40}
-          gap={56}
-          items={STACK.map((s) => (
-            <span
-              key={s.name}
-              className="group flex items-center gap-3 text-muted-foreground transition-colors hover:text-[var(--brand)]"
-              style={{ "--brand": s.color ?? "var(--foreground)" } as CSSProperties}
-            >
-              {s.path ? (
-                <svg viewBox="0 0 24 24" aria-hidden className="size-7 fill-current">
-                  <path d={s.path} />
-                </svg>
-              ) : s.name === "WebGL" ? (
-                <Box aria-hidden className="size-7" strokeWidth={1.75} />
-              ) : (
-                <span aria-hidden className="grid size-7 place-items-center rounded-md bg-current">
-                  <span className="font-display text-sm font-black text-background">M</span>
-                </span>
-              )}
-              <span className="font-display text-xl font-semibold">{s.name}</span>
-            </span>
-          ))}
-        />
+        <Marquee items={stackLogos} speed={50} hoverSpeed={0} gap={72} ariaLabel="Built with" />
       </section>
 
       <section className="mx-auto max-w-[90rem] px-6 py-24">

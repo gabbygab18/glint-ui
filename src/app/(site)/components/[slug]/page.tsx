@@ -8,7 +8,7 @@ import { PromoCard, RightRail, Toc } from "@/components/right-rail";
 import { Tabs } from "@/components/tabs";
 import { bySlug, categoryLabel, exportName, registry } from "@/registry";
 import { readSource } from "@/lib/source";
-import { SITE_URL } from "@/lib/site";
+import { installCommand, REGISTRY_NAMESPACE, SITE_URL } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -83,7 +83,18 @@ export default async function ComponentPage({ params }: PageProps<"/components/[
           tabs={[
             {
               label: "CLI",
-              content: <CodeBlock code={`npx shadcn@latest add ${SITE_URL}/r/${slug}.json`} lang="bash" slug={slug} />,
+              content: (
+                <div className="space-y-3">
+                  <CodeBlock code={installCommand(slug)} lang="bash" slug={slug} />
+                  <p className="text-sm text-muted-foreground">
+                    First time using {REGISTRY_NAMESPACE}?{" "}
+                    <Link href="/docs/installation#registry" className="text-foreground underline underline-offset-4">
+                      Add the registry to components.json
+                    </Link>{" "}
+                    once, or install by URL: <code className="text-xs text-foreground">npx shadcn@latest add {SITE_URL}/r/{slug}.json</code>
+                  </p>
+                </div>
+              ),
             },
             {
               label: "Manual",

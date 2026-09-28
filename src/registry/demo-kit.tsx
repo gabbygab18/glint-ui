@@ -51,11 +51,8 @@ export const notifications = [
   </div>
 ));
 
-export const logos = ["Next.js", "Supabase", "Vercel", "React", "Tailwind", "TypeScript", "Figma"].map((name) => (
-  <span key={name} className="text-2xl font-semibold tracking-tight text-muted-foreground">
-    {name}
-  </span>
-));
+// Real brand marks (shared with the landing page).
+export { stackLogos as logos } from "@/components/stack-logo";
 
 export const stackCards = ["from-lime-300 to-emerald-500", "from-cyan-300 to-blue-600", "from-violet-300 to-fuchsia-600", "from-amber-200 to-orange-500"].map(
   (g, i) => (

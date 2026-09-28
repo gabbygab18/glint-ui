@@ -9,3 +9,8 @@ const siteHost = env(process.env.NEXT_PUBLIC_SITE_URL) ?? env(process.env.VERCEL
 export const SITE_URL = siteHost ? withProtocol(siteHost).replace(/\/+$/, "") : "http://localhost:3000";
 
 export const GITHUB_URL = env(process.env.NEXT_PUBLIC_GITHUB_URL) ?? "https://github.com/gabbygab18/glint-ui";
+
+// shadcn namespace: `npx shadcn@latest add @glint-ui/<name>`.
+export const REGISTRY_NAMESPACE = "@glint-ui";
+export const REGISTRY_ITEM_URL = `${SITE_URL}/r/{name}.json`;
+export const installCommand = (slug: string) => `npx shadcn@latest add ${REGISTRY_NAMESPACE}/${slug}`;
