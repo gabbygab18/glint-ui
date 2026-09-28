@@ -15,6 +15,8 @@ export interface GlintBotProps {
   ink?: string;
   /** Turn the head toward the pointer. */
   followCursor?: boolean;
+  /** Raise the right arm and wave. */
+  wave?: boolean;
   /** Blink, react to clicks, blush when petted, get dizzy when poked. */
   interactive?: boolean;
   label?: string;
@@ -45,6 +47,7 @@ const NOISE =
 
 const css = `
 @keyframes glint-bot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4%)}}
+@keyframes glint-bot-wave{0%,100%{transform:rotate(30deg)}50%{transform:rotate(58deg)}}
 @keyframes glint-bot-wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
 `;
 
@@ -55,6 +58,7 @@ export function GlintBot({
   screen = "#f4efdf",
   ink = "#1c2410",
   followCursor = true,
+  wave = false,
   interactive = true,
   label = "Glint Bot",
   className,
@@ -357,7 +361,7 @@ export function GlintBot({
       />
       <div ref={squashRef} aria-hidden style={{ position: "absolute", inset: 0, transformOrigin: "50% 92%" }}>
         {/* Body: neck, torso and shoulder pads, shaded to match the key light. */}
-        <svg viewBox="0 0 200 100" style={{ position: "absolute", left: "19%", width: "62%", bottom: "6%" }}>
+        <svg viewBox="0 0 200 100" overflow="visible" style={{ position: "absolute", left: "19%", width: "62%", bottom: "6%" }}>
           <defs>
             <linearGradient id="glint-bot-torso" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#fbf8ef" />
@@ -374,6 +378,20 @@ export function GlintBot({
           <rect x="80" y="62" width="40" height="10" rx="5" fill={color} opacity=".85" />
           <circle cx="42" cy="68" r="20" fill="url(#glint-bot-pad)" />
           <circle cx="158" cy="68" r="20" fill="url(#glint-bot-pad)" />
+          {wave && (
+            // Raised arm pivoting on the right shoulder, drawn over the pad.
+            <g
+              style={{
+                transformBox: "view-box",
+                transformOrigin: "158px 62px",
+                animation: "glint-bot-wave 1.1s ease-in-out infinite",
+              }}
+            >
+              <rect x="149" y="-46" width="18" height="112" rx="9" fill="url(#glint-bot-torso)" />
+              <circle cx="158" cy="-50" r="18" fill="url(#glint-bot-pad)" />
+              <circle cx="158" cy="68" r="20" fill="url(#glint-bot-pad)" />
+            </g>
+          )}
         </svg>
         {/* Head */}
         <div

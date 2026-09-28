@@ -13,6 +13,7 @@ export default {
     { name: "screen", type: "color", default: "#f4efdf", description: "Face screen color." },
     { name: "ink", type: "color", default: "#1c2410", description: "Eyes and mouth color." },
     { name: "followCursor", type: "boolean", default: true, description: "Turn the head toward the pointer." },
+    { name: "wave", type: "boolean", default: false, description: "Raise the right arm and wave." },
     { name: "interactive", type: "boolean", default: true, description: "Blink and react to clicks, petting and poking." },
     { name: "label", type: "string", default: "Glint Bot", description: "Accessible name." },
   ],

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ComponentGrid, QuickNav } from "@/components/component-grid";
 import { PromoCard, RailCard, RightRail } from "@/components/right-rail";
 import { registry } from "@/registry";
+import { GlintBot } from "@/registry/items/glint-bot/glint-bot";
 
 export const metadata: Metadata = {
   title: "Components",
@@ -24,6 +25,10 @@ export default function ComponentsPage() {
         <RailCard title="Quick navigation">
           <QuickNav />
         </RailCard>
+        <div className="flex flex-col items-center pt-2">
+          <GlintBot size={190} wave label="Glint, waving hello" />
+          <p className="-mt-1 text-sm text-muted-foreground">Hi, I&apos;m Glint. Boop me.</p>
+        </div>
       </RightRail>
     </>
   );
