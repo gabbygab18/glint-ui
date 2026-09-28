@@ -47,11 +47,9 @@ export function GlintGreeter({ count }: { count: number }) {
   const text = script[line];
 
   return (
-    // Fixed to the viewport and clipped at its right edge, so Glint bleeds off-screen.
-    <div
-      className="pointer-events-none fixed right-0 bottom-8 z-40 hidden overflow-hidden md:block"
-      style={{ width: SIZE + 190, height: SIZE + 40 }}
-    >
+    // Fixed to the viewport. Glint sits partly past the right edge, so the screen edge itself
+    // cuts it off (fixed boxes never add page scroll). Nothing else clips it.
+    <div className="pointer-events-none fixed right-0 bottom-14 z-40 hidden md:block" style={{ width: SIZE, height: SIZE }}>
       <AnimatePresence>
         {visible && (
           <motion.div
@@ -94,11 +92,13 @@ export function GlintGreeter({ count }: { count: number }) {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 6, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 26 }}
-            className="pointer-events-auto absolute top-10 left-1 w-44 rounded-2xl border bg-card px-3.5 py-2.5 text-sm leading-snug text-card-foreground shadow-xl"
+            // Anchored to where the tilted head lands, so the tail touches Glint.
+            style={{ right: SIZE * 0.64, bottom: SIZE * 0.66 }}
+            className="pointer-events-auto absolute w-44 origin-right rounded-2xl border bg-card px-3.5 py-2.5 text-sm leading-snug text-card-foreground shadow-xl"
           >
             {text}
             {/* Tail pointing right, toward Glint. */}
-            <span aria-hidden className="absolute top-5 -right-[7px] size-3 rotate-45 border-t border-r bg-card" />
+            <span aria-hidden className="absolute bottom-3 -right-[7px] size-3 rotate-45 border-t border-r bg-card" />
           </motion.div>
         )}
       </AnimatePresence>
