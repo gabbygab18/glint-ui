@@ -4,7 +4,8 @@ import Link from "next/link";
 import { bySlug } from "@/registry";
 import { useFavorites } from "@/lib/favorites";
 import { signIn, supabase } from "@/lib/supabase";
-import { Button } from "@/registry/items/button/button";
+import { Badge } from "@/registry/items/badge/badge";
+import { Button, buttonVariants } from "@/registry/items/button/button";
 
 export default function FavoritesPage() {
   const { user, slugs, loading, error, toggle } = useFavorites();
@@ -16,7 +17,19 @@ export default function FavoritesPage() {
       <p className="mb-8 mt-2 text-muted-foreground">Components you saved, synced to your account.</p>
 
       {!supabase ? (
-        <Empty title="Accounts are not configured" body="Set the Supabase env vars to enable sign-in and favorites." />
+        <div className="relative overflow-hidden rounded-3xl border bg-card px-6 py-16 text-center">
+          <div aria-hidden className="absolute -top-20 left-1/2 size-64 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
+          <div className="relative flex flex-col items-center">
+            <Badge shine>Coming soon</Badge>
+            <h2 className="mt-5 font-display text-3xl font-bold tracking-tight">Save your favorites</h2>
+            <p className="mt-2 max-w-md text-balance text-muted-foreground">
+              Sign in to keep a personal collection of components, synced across devices. It is on its way.
+            </p>
+            <Link href="/components" className={buttonVariants({ className: "mt-8 rounded-full" })}>
+              Browse components
+            </Link>
+          </div>
+        </div>
       ) : loading ? (
         <ul className="space-y-3" aria-busy="true" aria-label="Loading favorites">
           {[0, 1, 2].map((i) => (
