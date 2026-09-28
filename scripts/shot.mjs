@@ -55,7 +55,8 @@ for (let i = 0; i < 60 && !targets; i++) {
 const page = targets?.find((t) => t.type === "page");
 if (!page) {
   console.error("could not start chrome");
-  done(1);
+  chrome.kill();
+  process.exit(1);
 }
 const ws = new WebSocket(page.webSocketDebuggerUrl);
 await new Promise((r) => (ws.onopen = r));

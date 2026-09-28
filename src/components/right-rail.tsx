@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { GitHubIcon } from "./icons";
 import { buttonVariants } from "@/registry/items/button/button";
+import { ScrollArea } from "@/registry/items/scroll-area/scroll-area";
 
 export function PromoCard() {
   return (
@@ -53,8 +54,10 @@ export function Toc({ items }: { items: { id: string; label: string }[] }) {
 
 export function RightRail({ children }: { children: ReactNode }) {
   return (
-    <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-72 shrink-0 space-y-4 overflow-y-auto py-8 2xl:block">
-      {children}
+    <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-72 shrink-0 2xl:block">
+      <ScrollArea className="h-full" viewportClassName="py-8">
+        <div className="space-y-4">{children}</div>
+      </ScrollArea>
     </aside>
   );
 }

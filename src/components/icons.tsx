@@ -1,21 +1,28 @@
 import { useId, type SVGProps } from "react";
 
-/** Glint Bot in 2D: the site logo (same art as src/app/icon.svg). */
+/** Glint in 2D: the site logo (same art as src/app/icon.svg). */
 export function Logo(props: SVGProps<SVGSVGElement>) {
   const clip = `glint-logo-${useId()}`;
   return (
     <svg viewBox="0 0 32 32" aria-hidden {...props}>
       <defs>
         <clipPath id={clip}>
-          <rect x="2" y="2" width="28" height="28" rx="7" />
+          <rect x="1.5" y="4" width="29" height="24" rx="6" />
         </clipPath>
       </defs>
-      <rect x="2" y="2" width="28" height="28" rx="7" fill="#b5e61d" />
-      <rect x="2" y="5.5" width="28" height="3.2" fill="#f4b860" clipPath={`url(#${clip})`} />
-      <rect x="6.5" y="11.5" width="19" height="14.5" rx="3.5" fill="#f4efdf" />
-      <rect x="11" y="14.6" width="2.6" height="4.6" rx="1.3" fill="#1c2410" />
-      <rect x="18.4" y="14.6" width="2.6" height="4.6" rx="1.3" fill="#1c2410" />
-      <path d="M13.8 21.4q2.2 1.9 4.4 0" fill="none" stroke="#1c2410" strokeWidth={1.5} strokeLinecap="round" />
+      <rect x="1.5" y="4" width="29" height="24" rx="6" fill="#b5e61d" />
+      <rect x="1.5" y="6.2" width="29" height="2.4" fill="#f4b860" clipPath={`url(#${clip})`} />
+      <rect x="4.5" y="10.5" width="23" height="14.5" rx="3.2" fill="#141a0f" />
+      {[11.2, 20.8].map((cx) => (
+        <g key={cx}>
+          <circle cx={cx} cy="16.3" r="4.1" fill="#0b0f08" stroke="#cfd3c5" strokeWidth="0.9" />
+          <circle cx={cx} cy="16.3" r="2.5" fill="#d9ff6b" />
+          <circle cx={cx} cy="16.3" r="0.8" fill="#141a0f" />
+        </g>
+      ))}
+      {[13.6, 16, 18.4].map((cx) => (
+        <circle key={cx} cx={cx} cy="22.4" r="0.75" fill="#d9ff6b" />
+      ))}
     </svg>
   );
 }
