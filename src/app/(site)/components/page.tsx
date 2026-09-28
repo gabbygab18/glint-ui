@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ComponentGrid, QuickNav } from "@/components/component-grid";
 import { PromoCard, RailCard, RightRail } from "@/components/right-rail";
 import { registry } from "@/registry";
-import { GlintGreeter } from "@/components/glint-greeter";
 
 export const metadata: Metadata = {
   title: "Components",
@@ -25,8 +24,6 @@ export default function ComponentsPage() {
         <RailCard title="Quick navigation">
           <QuickNav />
         </RailCard>
-        {/* Pulled up so Glint climbs out over the card edge. */}
-        <GlintGreeter count={registry.length} className="relative z-10 -mt-14" />
       </RightRail>
     </>
   );

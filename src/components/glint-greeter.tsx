@@ -9,11 +9,15 @@ const SCRIPTS = [
   ["Hey again!", "Press Ctrl K to search all of them.", "Or just browse. I'll wait."],
   ["Psst.", "Hover a preview, most of them react.", "Okay, back to hiding."],
 ];
-const LINE_MS = 2600;
-const HIDDEN_MS = 4500;
+const LINE_MS = 2800;
+const HIDDEN_MS = 9000;
+const SIZE = 230;
 
-/** Glint pops in, introduces the library in a speech bubble, then vanishes and comes back later. */
-export function GlintGreeter({ count, className }: { count: number; className?: string }) {
+/**
+ * Glint peeks in from the right edge of the screen, leaning in and partly cut off,
+ * says a few lines, then ducks back out and returns later with different ones.
+ */
+export function GlintGreeter({ count }: { count: number }) {
   const reduced = useReducedMotion();
   const [round, setRound] = useState(0);
   const [line, setLine] = useState(-1); // -1 = hidden
@@ -24,81 +28,80 @@ export function GlintGreeter({ count, className }: { count: number; className?: 
     if (reduced || held) return;
     const next =
       line === -1
-        ? () => setLine(0) // appear
+        ? () => setLine(0) // peek in
         : line < script.length
           ? () => setLine(line + 1) // next line, then one beat with no bubble before leaving
           : () => {
               setLine(-1);
               setRound((r) => r + 1);
             };
-    const delay = line === -1 ? (round === 0 ? 700 : HIDDEN_MS) : line < script.length ? LINE_MS : 900;
+    const delay = line === -1 ? (round === 0 ? 1500 : HIDDEN_MS) : line < script.length ? LINE_MS : 700;
     const t = window.setTimeout(next, delay);
     return () => window.clearTimeout(t);
   }, [line, held, reduced, round, script.length]);
 
-  const visible = reduced || line >= 0;
-  const text = reduced ? script[0] : script[line];
+  // Reduced motion: no surprise pop-ins at all.
+  if (reduced) return null;
+
+  const visible = line >= 0;
+  const text = script[line];
 
   return (
+    // Fixed to the viewport and clipped at its right edge, so Glint bleeds off-screen.
     <div
-      className={`relative h-[12rem] ${className ?? ""}`}
-      onPointerEnter={() => setHeld(true)}
-      onPointerLeave={() => setHeld(false)}
+      className="pointer-events-none fixed right-0 bottom-8 z-40 hidden overflow-hidden md:block"
+      style={{ width: SIZE + 190, height: SIZE + 40 }}
     >
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            key={`glint-${round}`}
+            className="pointer-events-auto absolute bottom-0"
+            style={{ right: -SIZE * 0.32, width: SIZE, height: SIZE, transformOrigin: "100% 100%" }}
+            initial={{ x: SIZE, rotate: -6 }}
+            animate={{ x: 0, rotate: -16 }}
+            exit={{ x: SIZE * 1.1, rotate: -4, transition: { duration: 0.45, ease: "backIn" } }}
+            transition={{ type: "spring", stiffness: 170, damping: 15 }}
+            onPointerEnter={() => setHeld(true)}
+            onPointerLeave={() => setHeld(false)}
+          >
+            {/* Surprise lines, like it just popped in. */}
+            <svg viewBox="0 0 60 60" aria-hidden className="absolute top-2 left-6 size-16 overflow-visible">
+              {["M18 30 L4 22", "M24 18 L16 4", "M16 42 L2 45"].map((d, i) => (
+                <motion.path
+                  key={d}
+                  d={d}
+                  stroke="var(--primary)"
+                  strokeWidth={5}
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0, opacity: 1 }}
+                  animate={{ pathLength: 1, opacity: [1, 1, 0] }}
+                  transition={{ duration: 1.6, delay: 0.25 + i * 0.06, times: [0, 0.65, 1] }}
+                />
+              ))}
+            </svg>
+            <GlintBot size={SIZE} wave label="Glint, waving hello" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {visible && text && (
           <motion.div
             key={`${round}-${line}`}
             role="status"
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.95 }}
+            initial={{ opacity: 0, x: 12, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 6, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 26 }}
-            className="absolute bottom-24 left-0 z-20 w-[8.5rem] rounded-2xl border bg-card px-3 py-2 text-xs leading-snug shadow-lg"
+            className="pointer-events-auto absolute top-10 left-1 w-44 rounded-2xl border bg-card px-3.5 py-2.5 text-sm leading-snug text-card-foreground shadow-xl"
           >
             {text}
             {/* Tail pointing right, toward Glint. */}
-            <span aria-hidden className="absolute top-4 -right-[7px] size-3 rotate-45 border-t border-r bg-card" />
+            <span aria-hidden className="absolute top-5 -right-[7px] size-3 rotate-45 border-t border-r bg-card" />
           </motion.div>
         )}
       </AnimatePresence>
-
-      <AnimatePresence>
-        {visible && (
-          <motion.div
-            key={`bot-${round}`}
-            initial={{ scale: 0, rotate: -25, opacity: 0 }}
-            animate={{ scale: 1, rotate: 0, opacity: 1 }}
-            exit={{ scale: 0, rotate: 20, opacity: 0, transition: { duration: 0.35, ease: "backIn" } }}
-            transition={{ type: "spring", stiffness: 300, damping: 14 }}
-            className="absolute right-0 bottom-0 origin-bottom"
-          >
-            <GlintBot size={176} wave label="Glint, waving hello" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Poof: a ring of sparkles each time Glint appears or vanishes. */}
-      {!reduced && (
-        <motion.div
-          key={`poof-${round}-${visible}`}
-          aria-hidden
-          className="pointer-events-none absolute right-[88px] bottom-16 size-0"
-        >
-          {Array.from({ length: 8 }, (_, i) => {
-            const a = (i / 8) * Math.PI * 2;
-            return (
-              <motion.span
-                key={i}
-                className="absolute size-2 rounded-full bg-primary"
-                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                animate={{ x: Math.cos(a) * 70, y: Math.sin(a) * 50, opacity: 0, scale: 0.2 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-              />
-            );
-          })}
-        </motion.div>
-      )}
     </div>
   );
 }

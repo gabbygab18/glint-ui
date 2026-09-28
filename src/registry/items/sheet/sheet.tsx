@@ -215,6 +215,8 @@ export function SheetContent({
           modal ? "fixed" : "absolute",
           sideClass[side],
           className,
+          // A closed <dialog> must stay hidden even if a caller passes a display class like `flex`.
+          "[&:not([open])]:hidden!",
         )}
       >
         <div className="ui-sheet-body flex h-full max-h-[inherit] flex-col gap-4 overflow-y-auto p-6">{children}</div>

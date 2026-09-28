@@ -32,7 +32,7 @@ export function MobileMenu() {
       <SheetTrigger aria-label="Open menu" className="size-9 rounded-full p-0 sm:hidden">
         <Menu className="size-5" />
       </SheetTrigger>
-      <SheetContent side="right" className="flex flex-col gap-6">
+      <SheetContent side="right">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2 font-display">
             <Logo className="size-7" /> {SITE_NAME}
