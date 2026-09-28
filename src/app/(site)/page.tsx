@@ -1,69 +1,110 @@
-import Image from "next/image";
+import { ArrowUpRight, Box, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "lucide-react";
+import Link from "next/link";
+import { Cta } from "@/components/cta";
+import { Hero } from "@/components/hero";
+import { CATEGORIES, inCategory, registry } from "@/registry";
+import { GlowBorder } from "@/registry/items/glow-border/glow-border";
+import { Marquee } from "@/registry/items/marquee/marquee";
+import { SpotlightCard } from "@/registry/items/spotlight-card/spotlight-card";
+import { TiltCard } from "@/registry/items/tilt-card/tilt-card";
+import { SITE_URL } from "@/lib/site";
+
+const icons = { type: Type, sparkles: Sparkles, layers: Layers, layout: LayoutGrid, pointer: MousePointerClick, zap: Zap, box: Box, smile: Smile };
+
+const stack = ["React 19", "Next.js", "Tailwind CSS v4", "shadcn CLI", "TypeScript", "Motion", "GSAP", "WebGL"];
+
+const features = [
+  { title: "Copy, paste, own it", body: "One file per component. No package, no version lock, no wrapper API to learn." },
+  { title: "shadcn native", body: "Install with the shadcn CLI. Uses the same theme tokens, so it matches your app in light and dark." },
+  { title: "Fast by default", body: "Canvas and WebGL effects pause offscreen, cap pixel ratio and respect reduced motion." },
+  { title: "Accessible", body: "Real text for screen readers, keyboard support on interactive pieces, visible focus." },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main>
+      <Hero count={registry.length} installCmd={`npx shadcn@latest add ${SITE_URL}/r/split-text.json`} />
+
+      <section aria-label="Built with" className="border-b py-8">
+        <Marquee
+          speed={40}
+          gap={56}
+          items={stack.map((s) => (
+            <span key={s} className="font-display text-xl font-semibold text-muted-foreground">
+              {s}
+            </span>
+          ))}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      </section>
+
+      <section className="mx-auto max-w-[90rem] px-6 py-24">
+        <div className="mb-12 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-sm font-medium text-primary">Categories</p>
+            <h2 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">Everything that moves</h2>
+          </div>
+          <Link href="/components" className="text-sm text-muted-foreground hover:text-foreground">
+            View all {registry.length} →
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {CATEGORIES.map((c) => {
+            const items = inCategory(c.id);
+            if (!items.length) return null;
+            const Icon = icons[c.icon];
+            return (
+              <SpotlightCard key={c.id} className="!rounded-3xl !border-border !bg-card !p-0">
+                <Link href={`/components/${items[0].slug}`} className="group block p-6">
+                  <span className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">
+                    <Icon className="size-5" />
+                  </span>
+                  <p className="mt-8 flex items-center justify-between font-display text-lg font-bold">
+                    {c.label}
+                    <ArrowUpRight className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{items.length} components</p>
+                </Link>
+              </SpotlightCard>
+            );
+          })}
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="border-y bg-card/40">
+        <div className="mx-auto grid max-w-[90rem] items-center gap-12 px-6 py-24 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-medium text-primary">Why {"it's"} different</p>
+            <h2 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">Yours from the first paste</h2>
+            <div className="mt-10 grid gap-8 sm:grid-cols-2">
+              {features.map((f) => (
+                <div key={f.title}>
+                  <h3 className="font-display text-lg font-bold">{f.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-8">
+            <TiltCard className="rounded-3xl">
+              <div className="w-80 rounded-3xl border bg-background p-6 shadow-2xl">
+                <div className="mb-16 flex items-center justify-between">
+                  <span className="size-10 rounded-xl bg-gradient-to-br from-primary to-cyan-400" />
+                  <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">tilt-card.tsx</span>
+                </div>
+                <p className="font-display text-xl font-bold">Tilt Card</p>
+                <p className="mt-1 text-sm text-muted-foreground">Hover me. This is the same file you would copy.</p>
+              </div>
+            </TiltCard>
+            <GlowBorder radius={9999} background="var(--background)">
+              <Link href="/components/tilt-card" className="block px-6 py-3 text-sm font-medium">
+                See the source →
+              </Link>
+            </GlowBorder>
+          </div>
+        </div>
+      </section>
+
+      <Cta />
+    </main>
   );
 }

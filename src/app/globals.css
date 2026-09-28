@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* shadcn/ui token names, so registry components drop into any shadcn project. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 0.875rem;
+  --background: oklch(0.985 0.002 110);
+  --foreground: oklch(0.18 0.01 110);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 110);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 110);
+  --primary: oklch(0.72 0.19 128);
+  --primary-foreground: oklch(0.18 0.03 128);
+  --secondary: oklch(0.95 0.005 110);
+  --secondary-foreground: oklch(0.22 0.01 110);
+  --muted: oklch(0.955 0.004 110);
+  --muted-foreground: oklch(0.5 0.01 110);
+  --accent: oklch(0.95 0.03 128);
+  --accent-foreground: oklch(0.25 0.05 128);
+  --destructive: oklch(0.6 0.22 25);
+  --border: oklch(0.91 0.005 110);
+  --input: oklch(0.91 0.005 110);
+  --ring: oklch(0.72 0.19 128);
+}
+
+.dark {
+  --background: oklch(0.145 0.004 110);
+  --foreground: oklch(0.97 0.003 110);
+  --card: oklch(0.18 0.005 110);
+  --card-foreground: oklch(0.97 0.003 110);
+  --popover: oklch(0.19 0.005 110);
+  --popover-foreground: oklch(0.97 0.003 110);
+  --primary: oklch(0.91 0.2 125);
+  --primary-foreground: oklch(0.2 0.04 125);
+  --secondary: oklch(0.23 0.006 110);
+  --secondary-foreground: oklch(0.97 0.003 110);
+  --muted: oklch(0.22 0.005 110);
+  --muted-foreground: oklch(0.7 0.01 110);
+  --accent: oklch(0.26 0.03 125);
+  --accent-foreground: oklch(0.95 0.08 125);
+  --destructive: oklch(0.66 0.2 25);
+  --border: oklch(1 0 0 / 0.09);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: oklch(0.91 0.2 125);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-satoshi), var(--font-poppins), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .dark {
+    color-scheme: dark;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Text fields style their own focus (usually a ring on the field or its wrapper).
+   A browser outline on the bare <input> inside would draw a second, square ring. */
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"]), textarea, select):focus-visible {
+  outline: none;
+}
+
+/* Thin, theme-aware scrollbars everywhere (page, sidebar, code blocks, components). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent) transparent;
+}
+
+/* Shiki: both themes are emitted as CSS vars; pick by site theme. */
+.code pre {
+  background: transparent !important;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.code span {
+  color: var(--shiki-light);
+}
+.dark .code span {
+  color: var(--shiki-dark);
+}
+
+/* Film grain for CTA / hero surfaces. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
