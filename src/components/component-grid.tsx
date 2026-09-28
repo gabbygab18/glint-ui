@@ -1,47 +1,94 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CATEGORIES, registry, type Category, type RegistryEntry } from "@/registry";
 import { useStats } from "@/lib/stats";
 import { Search as SearchIcon } from "lucide-react";
 import { Badge } from "@/registry/items/badge/badge";
 import { Button } from "@/registry/items/button/button";
 import { Input } from "@/registry/items/input/input";
+import { Pagination } from "@/registry/items/pagination/pagination";
 import { Select } from "@/registry/items/select/select";
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const letterOf = (e: RegistryEntry) => e.name[0].toUpperCase();
+const PAGE_SIZE = 24; // divisible by 1, 2 and 3 columns
+const LETTER_EVENT = "glint:letter";
 
 export function ComponentGrid() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "all">("all");
   const [sort, setSort] = useState<"az" | "popular">("az");
+  const [page, setPage] = useState(1);
+  const [jumpTo, setJumpTo] = useState<string | null>(null);
+  const top = useRef<HTMLDivElement>(null);
   const stats = useStats();
 
   const q = query.trim().toLowerCase();
   const popularity = (e: RegistryEntry) => (stats?.[e.slug]?.views ?? 0) + (stats?.[e.slug]?.copies ?? 0) * 5;
   const entries = registry
-    .filter((e) => (category === "all" || e.category === category) && (!q || `${e.name} ${e.description}`.toLowerCase().includes(q)))
+    .filter(
+      (e) =>
+        (category === "all" || e.category === category) &&
+        (!q || `${e.name} ${e.description}`.toLowerCase().includes(q)),
+    )
     .sort((a, b) => (sort === "popular" ? popularity(b) - popularity(a) : a.name.localeCompare(b.name)));
+
+  const pages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+  const current = Math.min(page, pages);
+  const visible = entries.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 
   const reset = () => {
     setQuery("");
     setCategory("all");
+    setPage(1);
   };
+
+  const goTo = (p: number) => {
+    setPage(p);
+    top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Quick-nav letters: switch to A–Z, clear filters and open the page that holds the letter.
+  useEffect(() => {
+    const onLetter = (e: Event) => {
+      const letter = (e as CustomEvent<string>).detail;
+      const all = [...registry].sort((a, b) => a.name.localeCompare(b.name));
+      const index = all.findIndex((x) => letterOf(x) === letter);
+      if (index < 0) return;
+      setQuery("");
+      setCategory("all");
+      setSort("az");
+      setPage(Math.floor(index / PAGE_SIZE) + 1);
+      setJumpTo(letter);
+    };
+    window.addEventListener(LETTER_EVENT, onLetter);
+    return () => window.removeEventListener(LETTER_EVENT, onLetter);
+  }, []);
+
+  // Scroll once the page holding the letter has rendered.
+  useEffect(() => {
+    if (!jumpTo) return;
+    document.getElementById(`letter-${jumpTo}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setJumpTo(null); // eslint-disable-line react-hooks/set-state-in-effect -- one-shot scroll request
+  }, [jumpTo, current]);
 
   // First card of each letter gets an anchor for the quick-nav rail.
   const seen = new Set<string>();
 
   return (
-    <div>
+    <div ref={top} className="scroll-mt-24">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
         <Input
           type="search"
           size="lg"
           startIcon={<SearchIcon />}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(1);
+          }}
           placeholder={`Search ${registry.length} components…`}
           aria-label="Filter components"
           spellCheck={false}
@@ -49,7 +96,10 @@ export function ComponentGrid() {
         />
         <Select
           value={sort}
-          onValueChange={(v) => setSort(v as typeof sort)}
+          onValueChange={(v) => {
+            setSort(v as typeof sort);
+            setPage(1);
+          }}
           aria-label="Sort"
           options={[
             { value: "az", label: "A–Z" },
@@ -70,7 +120,10 @@ export function ComponentGrid() {
               size="sm"
               variant={on ? "default" : "outline"}
               aria-pressed={on}
-              onClick={() => setCategory(c.id)}
+              onClick={() => {
+                setCategory(c.id);
+                setPage(1);
+              }}
               className="rounded-full"
             >
               {c.label} <span className="opacity-60">{count}</span>
@@ -87,18 +140,26 @@ export function ComponentGrid() {
           </Button>
         </div>
       ) : (
-        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {entries.map((e) => {
-            const l = letterOf(e);
-            const anchor = sort === "az" && !seen.has(l) ? `letter-${l}` : undefined;
-            seen.add(l);
-            return (
-              <li key={e.slug} id={anchor} className="scroll-mt-24">
-                <Card entry={e} />
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {visible.map((e) => {
+              const l = letterOf(e);
+              const anchor = sort === "az" && !seen.has(l) ? `letter-${l}` : undefined;
+              seen.add(l);
+              return (
+                <li key={e.slug} id={anchor} className="scroll-mt-24">
+                  <Card entry={e} />
+                </li>
+              );
+            })}
+          </ul>
+          <div className="mt-10 flex flex-col items-center gap-3">
+            {pages > 1 && <Pagination total={pages} page={current} onPageChange={goTo} />}
+            <p className="text-sm text-muted-foreground">
+              {(current - 1) * PAGE_SIZE + 1}–{Math.min(current * PAGE_SIZE, entries.length)} of {entries.length}
+            </p>
+          </div>
+        </>
       )}
     </div>
   );
@@ -151,7 +212,15 @@ export function QuickNav() {
     <div className="grid grid-cols-7 gap-1 text-sm">
       {LETTERS.map((l) =>
         available.has(l) ? (
-          <a key={l} href={`#letter-${l}`} className="grid h-8 place-items-center rounded-md font-medium hover:bg-muted">
+          <a
+            key={l}
+            href={`#letter-${l}`}
+            onClick={(e) => {
+              e.preventDefault();
+              window.dispatchEvent(new CustomEvent(LETTER_EVENT, { detail: l }));
+            }}
+            className="grid h-8 place-items-center rounded-md font-medium hover:bg-muted"
+          >
             {l}
           </a>
         ) : (

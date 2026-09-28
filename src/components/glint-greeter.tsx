@@ -13,7 +13,7 @@ const LINE_MS = 2600;
 const HIDDEN_MS = 4500;
 
 /** Glint pops in, introduces the library in a speech bubble, then vanishes and comes back later. */
-export function GlintGreeter({ count }: { count: number }) {
+export function GlintGreeter({ count, className }: { count: number; className?: string }) {
   const reduced = useReducedMotion();
   const [round, setRound] = useState(0);
   const [line, setLine] = useState(-1); // -1 = hidden
@@ -41,7 +41,7 @@ export function GlintGreeter({ count }: { count: number }) {
 
   return (
     <div
-      className="relative flex h-[16rem] flex-col items-center justify-end"
+      className={`relative h-[12rem] ${className ?? ""}`}
       onPointerEnter={() => setHeld(true)}
       onPointerLeave={() => setHeld(false)}
     >
@@ -54,14 +54,11 @@ export function GlintGreeter({ count }: { count: number }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 26 }}
-            className="absolute top-2 z-10 max-w-[15rem] rounded-2xl border bg-card px-4 py-2.5 text-center text-sm shadow-lg"
+            className="absolute bottom-24 left-0 z-20 w-[8.5rem] rounded-2xl border bg-card px-3 py-2 text-xs leading-snug shadow-lg"
           >
             {text}
-            {/* Tail pointing down at Glint. */}
-            <span
-              aria-hidden
-              className="absolute -bottom-[7px] left-1/2 size-3 -translate-x-1/2 rotate-45 border-r border-b bg-card"
-            />
+            {/* Tail pointing right, toward Glint. */}
+            <span aria-hidden className="absolute top-4 -right-[7px] size-3 rotate-45 border-t border-r bg-card" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -74,9 +71,9 @@ export function GlintGreeter({ count }: { count: number }) {
             animate={{ scale: 1, rotate: 0, opacity: 1 }}
             exit={{ scale: 0, rotate: 20, opacity: 0, transition: { duration: 0.35, ease: "backIn" } }}
             transition={{ type: "spring", stiffness: 300, damping: 14 }}
-            className="origin-bottom"
+            className="absolute right-0 bottom-0 origin-bottom"
           >
-            <GlintBot size={180} wave label="Glint, waving hello" />
+            <GlintBot size={176} wave label="Glint, waving hello" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -86,7 +83,7 @@ export function GlintGreeter({ count }: { count: number }) {
         <motion.div
           key={`poof-${round}-${visible}`}
           aria-hidden
-          className="pointer-events-none absolute bottom-16 left-1/2 size-0"
+          className="pointer-events-none absolute right-[88px] bottom-16 size-0"
         >
           {Array.from({ length: 8 }, (_, i) => {
             const a = (i / 8) * Math.PI * 2;

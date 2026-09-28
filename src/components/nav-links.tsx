@@ -12,7 +12,7 @@ const links = [
 export function NavLinks() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Main" className="flex items-center gap-1 text-sm">
+    <nav aria-label="Main" className="hidden items-center gap-1 text-sm sm:flex">
       {links.map((l) => {
         const active = pathname.startsWith(l.href);
         return (

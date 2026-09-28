@@ -4,6 +4,7 @@ import Link from "next/link";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { AuthButton } from "./auth-button";
 import { GitHubIcon, Logo } from "./icons";
+import { MobileMenu } from "./mobile-menu";
 import { NavLinks } from "./nav-links";
 import { Search } from "./search";
 import { ThemeSwitch } from "./theme-switch";
@@ -40,6 +41,7 @@ export function Header() {
             <ThemeSwitch />
           </div>
           <AuthButton />
+          <MobileMenu />
         </div>
       </div>
     </header>

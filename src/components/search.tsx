@@ -57,7 +57,7 @@ export function Search() {
         size="sm"
         onClick={open}
         startIcon={<SearchIcon />}
-        className="rounded-full text-muted-foreground hover:text-foreground sm:w-60 sm:justify-start"
+        className="rounded-full text-muted-foreground hover:text-foreground max-sm:hidden sm:w-60 sm:justify-start"
       >
         <span className="hidden sm:inline">Search components</span>
         <span className="sr-only sm:hidden">Search</span>

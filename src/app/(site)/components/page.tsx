@@ -25,7 +25,8 @@ export default function ComponentsPage() {
         <RailCard title="Quick navigation">
           <QuickNav />
         </RailCard>
-        <GlintGreeter count={registry.length} />
+        {/* Pulled up so Glint climbs out over the card edge. */}
+        <GlintGreeter count={registry.length} className="relative z-10 -mt-14" />
       </RightRail>
     </>
   );
