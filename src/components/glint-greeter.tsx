@@ -11,8 +11,19 @@ const SCRIPTS = [
 ];
 const LINE_MS = 2800;
 const HIDDEN_MS = 9000;
-// Glint scales with the viewport height so it stays in the empty corner below the rail.
-const sizeFor = (h: number) => Math.round(Math.min(200, Math.max(140, h * 0.2)));
+const BOTTOM = 24; // px from the bottom of the screen (matches bottom-6)
+const MIN = 170;
+const MAX = 250;
+
+/** As big as the empty corner under the right rail allows, so Glint never covers it. */
+function sizeFor() {
+  const rail = document.querySelector<HTMLElement>("[data-rail-content]");
+  const railVisible = rail && rail.getClientRects().length > 0;
+  const free = railVisible
+    ? window.innerHeight - rail.getBoundingClientRect().bottom - BOTTOM - 20
+    : window.innerHeight * 0.3;
+  return Math.round(Math.min(MAX, Math.max(MIN, free)));
+}
 
 /**
  * Glint peeks in from the right edge of the screen, leaning in and partly cut off,
@@ -26,7 +37,7 @@ export function GlintGreeter({ count }: { count: number }) {
   const [SIZE, setSize] = useState(180);
 
   useEffect(() => {
-    const fit = () => setSize(sizeFor(window.innerHeight));
+    const fit = () => setSize(sizeFor());
     fit();
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
@@ -37,7 +48,10 @@ export function GlintGreeter({ count }: { count: number }) {
     if (reduced || held) return;
     const next =
       line === -1
-        ? () => setLine(0) // peek in
+        ? () => {
+            setSize(sizeFor()); // re-measure the free corner each time Glint shows up
+            setLine(0); // peek in
+          }
         : line < script.length
           ? () => setLine(line + 1) // next line, then one beat with no bubble before leaving
           : () => {
