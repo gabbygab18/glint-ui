@@ -11,7 +11,8 @@ const SCRIPTS = [
 ];
 const LINE_MS = 2800;
 const HIDDEN_MS = 9000;
-const SIZE = 230;
+// Glint scales with the viewport height so it stays in the empty corner below the rail.
+const sizeFor = (h: number) => Math.round(Math.min(200, Math.max(140, h * 0.2)));
 
 /**
  * Glint peeks in from the right edge of the screen, leaning in and partly cut off,
@@ -22,6 +23,14 @@ export function GlintGreeter({ count }: { count: number }) {
   const [round, setRound] = useState(0);
   const [line, setLine] = useState(-1); // -1 = hidden
   const [held, setHeld] = useState(false);
+  const [SIZE, setSize] = useState(180);
+
+  useEffect(() => {
+    const fit = () => setSize(sizeFor(window.innerHeight));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
   const script = SCRIPTS[round % SCRIPTS.length].map((l) => l.replace("all of them", `all ${count}`));
 
   useEffect(() => {
@@ -49,7 +58,7 @@ export function GlintGreeter({ count }: { count: number }) {
   return (
     // Fixed to the viewport. Glint sits partly past the right edge, so the screen edge itself
     // cuts it off (fixed boxes never add page scroll). Nothing else clips it.
-    <div className="pointer-events-none fixed right-0 bottom-14 z-40 hidden md:block" style={{ width: SIZE, height: SIZE }}>
+    <div className="pointer-events-none fixed right-0 bottom-6 z-40 hidden md:block" style={{ width: SIZE, height: SIZE }}>
       <AnimatePresence>
         {visible && (
           <motion.div
@@ -93,8 +102,8 @@ export function GlintGreeter({ count }: { count: number }) {
             exit={{ opacity: 0, x: 6, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 420, damping: 26 }}
             // Anchored to where the tilted head lands, so the tail touches Glint.
-            style={{ right: SIZE * 0.64, bottom: SIZE * 0.66 }}
-            className="pointer-events-auto absolute w-44 origin-right rounded-2xl border bg-card px-3.5 py-2.5 text-sm leading-snug text-card-foreground shadow-xl"
+            style={{ right: SIZE * 0.66, bottom: SIZE * 0.46 }}
+            className="pointer-events-auto absolute w-40 origin-right rounded-2xl border bg-card px-3 py-2 text-[13px] leading-snug text-card-foreground shadow-xl"
           >
             {text}
             {/* Tail pointing right, toward Glint. */}
