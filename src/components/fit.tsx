@@ -75,7 +75,7 @@ export function Fit({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div ref={ref} data-fit className="grid w-full self-stretch place-items-center">
+    <div ref={ref} data-fit className="grid w-full grid-cols-[minmax(0,1fr)] self-stretch place-items-center">
       {children}
     </div>
   );

@@ -96,6 +96,12 @@ if (mouse) {
   }
   await sleep(500);
 }
+// RESIZE=w,h resizes the viewport after load, to test live window resizing.
+if (process.env.RESIZE) {
+  const [rw, rh] = process.env.RESIZE.split(",").map(Number);
+  await send("Emulation.setDeviceMetricsOverride", { width: rw, height: rh, deviceScaleFactor: 1, mobile: rw < 600 });
+  await sleep(1500);
+}
 // CLICK=x,y clicks once before the screenshot (e.g. to open a popover).
 if (process.env.CLICK) {
   const [x, y] = process.env.CLICK.split(",").map(Number);

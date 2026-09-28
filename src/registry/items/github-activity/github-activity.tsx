@@ -91,7 +91,9 @@ const MONTH_NAMES = [
  * from `currentColor`.
  */
 const SURFACE = [
-  "relative max-w-full p-4 select-none",
+  // min-w-0: inside a flex row the card must be allowed to shrink below its full-year width,
+  // so the grid can drop the oldest weeks instead of overflowing.
+  "relative max-w-full min-w-0 p-4 select-none",
   "sm:p-5",
 ].join(" ");
 
