@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { Badge } from "@/registry/items/badge/badge";
 import { buttonVariants } from "@/registry/items/button/button";
-import { DotGrid } from "@/registry/items/dot-grid/dot-grid";
+import { PinMatrix } from "@/registry/items/pin-matrix/pin-matrix";
 import { GlintBot } from "@/registry/items/glint-bot/glint-bot";
-import { RotatingText } from "@/registry/items/rotating-text/rotating-text";
+import { WordCycle } from "@/registry/items/word-cycle/word-cycle";
 import { GitHubIcon, Logo } from "./icons";
 
 const LINES = ["Hi! I'm Glint.", "We're polishing the last few pixels.", "Boop me while you wait."];
@@ -22,7 +22,7 @@ export function ComingSoon({ count }: { count: number }) {
   return (
     <main className="dark relative isolate flex min-h-dvh flex-col overflow-hidden bg-[oklch(0.13_0.004_110)] text-foreground">
       <div aria-hidden className="absolute inset-0 -z-10 opacity-60">
-        <DotGrid gap={26} dotSize={1.4} baseColor="#3a3f33" activeColor="#b5e61d" proximity={170} />
+        <PinMatrix gap={26} dotSize={1.4} baseColor="#3a3f33" activeColor="#b5e61d" proximity={170} />
       </div>
       <div
         aria-hidden
@@ -44,7 +44,7 @@ export function ComingSoon({ count }: { count: number }) {
           <h1 className="mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
             Something&apos;s
             <br />
-            <RotatingText words={["glinting.", "moving.", "almost here."]} interval={2400} className="pb-[0.12em] leading-[1.1] text-primary" />
+            <WordCycle words={["glinting.", "moving.", "almost here."]} interval={2400} className="pb-[0.12em] leading-[1.1] text-primary" />
           </h1>
           <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
             {count} animated React components: text effects, cursors, WebGL backgrounds, UI and mascots. Copy one,

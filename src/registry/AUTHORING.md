@@ -12,7 +12,7 @@ items/<slug>/
 `scripts/gen-registry.mjs` picks up any folder with all three files and rebuilds
 `src/registry/generated/*`. Never edit generated files by hand.
 
-Study these existing items before writing: `split-text`, `dot-grid`, `particles`,
+Study these existing items before writing: `letter-rise`, `pin-matrix`, `mote-field`,
 `magnet`, `dock`, `glow-border`, `calamansi`.
 
 ## Hard rules

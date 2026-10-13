@@ -3,12 +3,12 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRef, type CSSProperties, type PointerEvent } from "react";
-import { CountUp } from "@/registry/items/count-up/count-up";
-import { DecryptedText } from "@/registry/items/decrypted-text/decrypted-text";
-import { DotGrid } from "@/registry/items/dot-grid/dot-grid";
+import { Tally } from "@/registry/items/tally/tally";
+import { CipherReveal } from "@/registry/items/cipher-reveal/cipher-reveal";
+import { PinMatrix } from "@/registry/items/pin-matrix/pin-matrix";
 import { GlintBot } from "@/registry/items/glint-bot/glint-bot";
-import { Magnet } from "@/registry/items/magnet/magnet";
-import { RotatingText } from "@/registry/items/rotating-text/rotating-text";
+import { PullHover } from "@/registry/items/pull-hover/pull-hover";
+import { WordCycle } from "@/registry/items/word-cycle/word-cycle";
 import { CopyButton } from "./copy-button";
 import { buttonVariants } from "@/registry/items/button/button";
 
@@ -34,7 +34,7 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
     <section ref={ref} onPointerMove={onMove} className="relative isolate overflow-hidden border-b">
       {/* Interactive backdrop: dot field + a spotlight that follows the pointer. */}
       <div aria-hidden className="absolute inset-0 -z-10 opacity-70">
-        <DotGrid gap={26} dotSize={1.4} baseColor="#8a8f7e" activeColor="#b5e61d" proximity={160} />
+        <PinMatrix gap={26} dotSize={1.4} baseColor="#8a8f7e" activeColor="#b5e61d" proximity={160} />
       </div>
       <div
         aria-hidden
@@ -60,7 +60,7 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
           <h1 className="mt-7 font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
             Interfaces that
             <br />
-            <RotatingText words={["move.", "glow.", "react.", "feel alive."]} interval={2200} className="pb-[0.12em] pt-[0.04em] leading-[1.1] text-primary" />
+            <WordCycle words={["move.", "glow.", "react.", "feel alive."]} interval={2200} className="pb-[0.12em] pt-[0.04em] leading-[1.1] text-primary" />
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
@@ -69,7 +69,7 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Magnet padding={40} strength={6}>
+            <PullHover padding={40} strength={6}>
               <Link
                 href="/components"
                 className={buttonVariants({ size: "lg", className: "group rounded-full px-7 text-sm font-semibold shadow-[0_8px_30px_-8px_var(--primary)]" })}
@@ -77,7 +77,7 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
                 Browse components
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
-            </Magnet>
+            </PullHover>
             <Link
               href="/docs/installation"
               className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full bg-card/60 px-7 text-sm backdrop-blur" })}
@@ -101,7 +101,7 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd className="font-display text-3xl font-bold">
-                  <CountUp to={s.value} duration={1600} />
+                  <Tally to={s.value} duration={1600} />
                 </dd>
                 <dd className="text-sm text-muted-foreground">{s.label}</dd>
               </div>
@@ -121,22 +121,22 @@ export function Hero({ count, installCmd }: { count: number; installCmd: string 
           </div>
 
           <div className="absolute left-0 top-[8%] rounded-2xl border bg-card/80 px-4 py-3 shadow-xl backdrop-blur" style={depth(-22)}>
-            <p className="text-[11px] text-muted-foreground">Decrypted Text</p>
-            <DecryptedText text="hover to decrypt" trigger="hover" className="font-mono text-sm text-primary" />
+            <p className="text-[11px] text-muted-foreground">Cipher Reveal</p>
+            <CipherReveal text="hover to decrypt" trigger="hover" className="font-mono text-sm text-primary" />
           </div>
 
           <div className="absolute bottom-[10%] left-[2%] rounded-2xl border bg-card/80 px-4 py-3 shadow-xl backdrop-blur" style={depth(-30)}>
-            <p className="text-[11px] text-muted-foreground">Count Up</p>
+            <p className="text-[11px] text-muted-foreground">Tally</p>
             <p className="font-display text-2xl font-bold">
-              +<CountUp to={count} duration={2400} />
+              +<Tally to={count} duration={2400} />
             </p>
           </div>
 
           <div className="absolute right-0 top-[20%] rounded-2xl border bg-card/80 p-3 shadow-xl backdrop-blur" style={depth(26)}>
-            <p className="mb-2 text-[11px] text-muted-foreground">Magnet</p>
-            <Magnet padding={50} strength={2.5}>
+            <p className="mb-2 text-[11px] text-muted-foreground">Pull Hover</p>
+            <PullHover padding={50} strength={2.5}>
               <span className="block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background">Pull me</span>
-            </Magnet>
+            </PullHover>
           </div>
 
           <p className="absolute inset-x-0 bottom-0 text-center text-xs text-muted-foreground">

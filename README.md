@@ -5,7 +5,7 @@ Animated React components you copy, paste and ship. Built with Next.js 16, Supab
 Each component is a single self-contained file with no dependencies beyond React 19 and Tailwind. You can copy the source or install it with the shadcn CLI:
 
 ```bash
-npx shadcn@latest add https://<your-domain>/r/split-text.json
+npx shadcn@latest add https://<your-domain>/r/letter-rise.json
 ```
 
 ## Quick start
@@ -125,10 +125,10 @@ Favorites do not have an API route. The browser talks to Supabase directly, and 
 ## Performance notes
 
 - **Per-component code splitting.** A docs page downloads only the component it shows (`React.lazy` per demo).
-- **Canvas backgrounds.** They pause offscreen (IntersectionObserver), cap DPR at 2, and draw a single frame under reduced motion. Dot Grid redraws only when the pointer moves, so an idle grid costs nothing.
-- **Pointer effects** (Magnet, Tilt, Spotlight, Dock, Shiny Button) write CSS variables or styles directly on the DOM node. They do not re-render React on each frame.
-- **Count Up** writes `textContent` in rAF, so it causes zero React renders while animating.
-- **Click Spark** runs its rAF loop only while sparks are alive.
+- **Canvas backgrounds.** They pause offscreen (IntersectionObserver), cap DPR at 2, and draw a single frame under reduced motion. Pin Matrix redraws only when the pointer moves, so an idle grid costs nothing.
+- **Pointer effects** (Pull Hover, Tilt Card, Torch Card, Hover Shelf, Shiny Button) write CSS variables or styles directly on the DOM node. They do not re-render React on each frame.
+- **Tally** writes `textContent` in rAF, so it causes zero React renders while animating.
+- **Tap Burst** runs its rAF loop only while sparks are alive.
 - **Stats** are fetched once per page load and shared through a module-level promise. Views are deduped per tab session and sent with `sendBeacon`, so they never block navigation.
 
 ### Known ceilings

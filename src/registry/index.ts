@@ -9,7 +9,7 @@ export type { Meta, PropDef } from "./types";
 
 export const bySlug = new Map(registry.map((e) => [e.slug, e]));
 
-/** PascalCase export name, e.g. "split-text" -> "SplitText". */
+/** PascalCase export name, e.g. "letter-rise" -> "LetterRise". */
 export const exportName = (slug: string) =>
   slug.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
 

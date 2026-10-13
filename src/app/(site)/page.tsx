@@ -6,7 +6,7 @@ import { Hero } from "@/components/hero";
 import { CATEGORIES, inCategory, registry } from "@/registry";
 import { GlowBorder } from "@/registry/items/glow-border/glow-border";
 import { Marquee } from "@/registry/items/marquee/marquee";
-import { SpotlightCard } from "@/registry/items/spotlight-card/spotlight-card";
+import { TorchCard } from "@/registry/items/torch-card/torch-card";
 import { TiltCard } from "@/registry/items/tilt-card/tilt-card";
 import { installCommand } from "@/lib/site";
 
@@ -22,7 +22,7 @@ const features = [
 export default function Home() {
   return (
     <main>
-      <Hero count={registry.length} installCmd={installCommand("split-text")} />
+      <Hero count={registry.length} installCmd={installCommand("letter-rise")} />
 
       <section aria-label="Built with" className="border-b py-8">
         <Marquee items={stackLogos} speed={50} hoverSpeed={0} gap={72} ariaLabel="Built with" />
@@ -44,7 +44,7 @@ export default function Home() {
             if (!items.length) return null;
             const Icon = icons[c.icon];
             return (
-              <SpotlightCard key={c.id} className="!rounded-3xl !border-border !bg-card !p-0">
+              <TorchCard key={c.id} className="!rounded-3xl !border-border !bg-card !p-0">
                 <Link href={`/components/${items[0].slug}`} className="group block p-6">
                   <span className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">
                     <Icon className="size-5" />
@@ -55,7 +55,7 @@ export default function Home() {
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">{items.length} components</p>
                 </Link>
-              </SpotlightCard>
+              </TorchCard>
             );
           })}
         </div>

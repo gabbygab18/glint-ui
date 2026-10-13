@@ -33,12 +33,12 @@ export default function InstallationPage() {
           <h2>3. Add a component</h2>
           <p>Every component page has its own command. For example:</p>
         </Prose>
-        <CodeBlock code={installCommand("split-text")} lang="bash" />
+        <CodeBlock code={installCommand("letter-rise")} lang="bash" />
         <Prose>
           <p>
             The file lands in <code>components/ui</code> and the CLI installs any npm dependencies it needs. Prefer no
             setup? Any component also installs straight from its URL:{" "}
-            <code>npx shadcn@latest add {SITE_URL}/r/split-text.json</code>
+            <code>npx shadcn@latest add {SITE_URL}/r/letter-rise.json</code>
           </p>
           <h2>4. Or copy it by hand</h2>
           <p>

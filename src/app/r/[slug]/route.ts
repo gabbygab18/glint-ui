@@ -2,7 +2,7 @@ import { bySlug, registry } from "@/registry";
 import { readSource } from "@/lib/source";
 
 // shadcn registry items, prerendered at build:
-//   npx shadcn@latest add https://<site>/r/split-text.json
+//   npx shadcn@latest add https://<site>/r/letter-rise.json
 export const dynamicParams = false;
 
 export function generateStaticParams() {
