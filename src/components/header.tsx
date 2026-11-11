@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { AuthButton } from "./auth-button";
 import { GitHubIcon, Logo } from "./icons";
@@ -12,24 +11,11 @@ import { ThemeSwitch } from "./theme-switch";
 import { buttonVariants } from "@/registry/items/button/button";
 import { Tooltip } from "@/registry/items/tooltip/tooltip";
 
-/**
- * Site header. On the home page it lives inside the hero card (`inset`), so the
- * layout copy renders nothing there and the hero renders its own.
- * Every page uses the same geometry: a bar inset 8/12px from the edges, like the
- * hero card, so the logo and links don't shift when you change pages.
- */
-export function Header({ inset = false }: { inset?: boolean }) {
-  const pathname = usePathname();
-  if (!inset && pathname === "/") return null;
+/** Floating site header: a rounded bar inset from the edges, the same on every page. */
+export function Header() {
   return (
-    <header className={inset ? "relative z-40" : "sticky top-0 z-40 px-2 pt-2 sm:px-3 sm:pt-3"}>
-      <div
-        className={
-          inset
-            ? "border border-transparent"
-            : "rounded-[1.25rem] border bg-background/80 shadow-sm backdrop-blur-xl sm:rounded-[1.5rem]"
-        }
-      >
+    <header className="sticky top-0 z-40 px-2 pt-2 sm:px-3 sm:pt-3">
+      <div className="rounded-[1.25rem] border bg-background/80 shadow-sm backdrop-blur-xl sm:rounded-[1.5rem]">
         <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-6 px-4 sm:px-6">
           <Link
             href="/"

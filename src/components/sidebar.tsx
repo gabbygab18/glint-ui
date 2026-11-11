@@ -1,6 +1,7 @@
 "use client";
 
 import { BookOpen, Box, ChevronDown, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "@/components/site-icons";
+import { LayoutGroup, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CATEGORIES, registry } from "@/registry";
@@ -32,13 +33,21 @@ function Item({ href, label, isNew }: { href: string; label: string; isNew?: boo
       <Link
         href={href}
         aria-current={current ? "page" : undefined}
-        className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors ${
-          current ? "bg-foreground font-medium text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+        className={`relative flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors duration-300 ${
+          current ? "font-medium text-white dark:text-[#141a0f]" : "text-muted-foreground hover:bg-muted hover:text-foreground"
         }`}
       >
-        <span className="truncate">{label}</span>
+        {/* One highlight that glides to the current page instead of jumping. */}
+        {current && (
+          <motion.span
+            layoutId="sidebar-active"
+            className="btn-ink absolute inset-0 rounded-lg dark:[background:#d9ff6b]"
+            transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
+          />
+        )}
+        <span className="relative truncate">{label}</span>
         {isNew && (
-          <Badge size="sm" variant={current ? "secondary" : "default"} className="ml-auto shrink-0">
+          <Badge size="sm" variant={current ? "secondary" : "default"} className="relative ml-auto shrink-0">
             New
           </Badge>
         )}
@@ -101,13 +110,18 @@ export function Sidebar() {
     <>
       <aside className="sticky top-20 hidden h-[calc(100dvh-5rem)] w-64 shrink-0 lg:block">
         <ScrollArea className="h-full" viewportClassName="overscroll-contain py-8 pr-4">
-          <SidebarNav />
+          {/* Each copy of the nav gets its own scope, so its highlight never tries to slide in from the other. */}
+          <LayoutGroup id="sidebar-desktop">
+            <SidebarNav />
+          </LayoutGroup>
         </ScrollArea>
       </aside>
       <details className="mt-6 rounded-2xl border bg-card lg:hidden">
         <summary className="cursor-pointer px-4 py-3 text-sm text-muted-foreground">Browse components</summary>
         <ScrollArea className="max-h-[60vh] border-t" viewportClassName="max-h-[60vh] p-3">
-          <SidebarNav />
+          <LayoutGroup id="sidebar-mobile">
+            <SidebarNav />
+          </LayoutGroup>
         </ScrollArea>
       </details>
     </>

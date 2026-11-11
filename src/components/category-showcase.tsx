@@ -1,55 +1,28 @@
 "use client";
 
-import { ArrowRight, Box, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "@/components/site-icons";
+import { ArrowRight } from "@/components/site-icons";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 
-const icons = { type: Type, sparkles: Sparkles, layers: Layers, layout: LayoutGrid, pointer: MousePointerClick, zap: Zap, box: Box, smile: Smile };
-
 export interface ShowcaseCategory {
   id: string;
   label: string;
-  icon: keyof typeof icons;
   count: number;
   blurb: string;
   examples: { slug: string; name: string }[];
 }
 
-function SideCard({ c, side, onPick }: { c: ShowcaseCategory; side: "left" | "right"; onPick: () => void }) {
-  const Icon = icons[c.icon];
-  return (
-    <button
-      type="button"
-      onClick={onPick}
-      tabIndex={-1}
-      aria-hidden
-      className={`hidden w-64 shrink-0 rounded-3xl border bg-card p-6 text-left opacity-55 transition-opacity hover:opacity-80 md:block ${
-        side === "left" ? "[mask-image:linear-gradient(to_right,transparent,#000_45%)]" : "[mask-image:linear-gradient(to_left,transparent,#000_45%)]"
-      }`}
-    >
-      <span className="grid size-10 place-items-center rounded-xl bg-muted text-muted-foreground">
-        <Icon className="size-5" />
-      </span>
-      <p className="mt-6 font-display text-lg font-bold">{c.label}</p>
-      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.blurb}</p>
-    </button>
-  );
-}
-
-/** Category tabs over a row of cards, with the chosen category as the dark center card. */
+/** Numbered category list on the left; the chosen one fills the big card on the right. */
 export function CategoryShowcase({ categories }: { categories: ShowcaseCategory[] }) {
   const [i, setI] = useState(0);
-  const n = categories.length;
-  const at = (k: number) => categories[(k + n) % n];
   const c = categories[i];
-  const Icon = icons[c.icon];
+  const lead = c.examples[0];
 
   return (
-    <div>
-      <div role="tablist" aria-label="Categories" className="mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border bg-card p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="grid gap-6 md:grid-cols-[1fr_1.1fr] md:items-center">
+      <div role="tablist" aria-label="Categories" aria-orientation="vertical" className="flex flex-col gap-1">
         {categories.map((cat, k) => {
-          const TabIcon = icons[cat.icon];
           const on = k === i;
           return (
             <button
@@ -58,70 +31,69 @@ export function CategoryShowcase({ categories }: { categories: ShowcaseCategory[
               role="tab"
               aria-selected={on}
               onClick={() => setI(k)}
-              className={`relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[13px] transition-colors ${
-                on ? "text-white" : "text-muted-foreground hover:text-foreground"
-              }`}
+              onKeyDown={(e) => {
+                const step = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+                if (!step) return;
+                e.preventDefault();
+                const next = (k + step + categories.length) % categories.length;
+                setI(next);
+                (e.currentTarget.parentElement?.children[next] as HTMLElement | undefined)?.focus();
+              }}
+              tabIndex={on ? 0 : -1}
+              className={`relative flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors ${on ? "text-white" : "hover:bg-foreground/5"}`}
             >
-              {on && <motion.span layoutId="showcase-tab" className="absolute inset-0 -z-0 rounded-full bg-[#141a0f]" transition={{ type: "spring", bounce: 0.2, duration: 0.4 }} />}
-              <TabIcon className={`relative size-4 ${on ? "text-[#d9ff6b]" : ""}`} />
-              <span className="relative whitespace-nowrap">{cat.label}</span>
+              {on && (
+                <motion.span layoutId="category-active" className="btn-ink absolute inset-0 rounded-xl" transition={{ type: "spring", bounce: 0.2, duration: 0.45 }} />
+              )}
+              <span className="btn-glossy relative grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold">
+                {String(k + 1).padStart(2, "0")}
+              </span>
+              <span className="relative">
+                <span className="block text-sm font-semibold">{cat.label}</span>
+                <span className={`block text-xs ${on ? "text-white/70" : "text-muted-foreground"}`}>
+                  {cat.examples
+                    .slice(0, 3)
+                    .map((e) => e.name)
+                    .join(" · ")}
+                </span>
+              </span>
             </button>
           );
         })}
       </div>
 
-      <div className="mt-10 flex items-center justify-center gap-5">
-        <SideCard c={at(i - 1)} side="left" onPick={() => setI((i - 1 + n) % n)} />
-
-        <div role="tabpanel" aria-label={c.label} className="w-full max-w-sm shrink-0 rounded-[1.75rem] border bg-card p-2 shadow-2xl">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={c.id}
-              initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-              transition={{ duration: 0.25 }}
-            >
-              <div
-                className="rounded-[1.35rem] p-6 text-white"
-                style={{ background: "radial-gradient(400px circle at 85% 0%, oklch(0.45 0.13 128 / 0.6), transparent 60%), linear-gradient(160deg, oklch(0.24 0.035 128), oklch(0.17 0.02 125))" }}
-              >
-                <span className="grid size-12 place-items-center rounded-2xl bg-[#d9ff6b] text-[#141a0f] shadow-[0_8px_24px_-8px_#d9ff6b]">
-                  <Icon className="size-6" />
-                </span>
-                <p className="mt-6 font-display text-2xl font-bold">{c.label}</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{c.blurb}</p>
-                <div className="mt-5 flex flex-wrap gap-1.5">
-                  {c.examples.map((e) => (
-                    <Link
-                      key={e.slug}
-                      href={`/components/${e.slug}`}
-                      className="rounded-full bg-white/10 px-2.5 py-1 text-xs text-white/85 transition-colors hover:bg-white/20 hover:text-white"
-                    >
-                      {e.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-3 pb-1 pt-3">
-                <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="size-2 rounded-full bg-primary" /> {c.count} components
-                </span>
-                <Link
-                  href={`/components/${c.examples[0]?.slug ?? ""}`}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#141a0f] py-1.5 pl-3.5 pr-1.5 text-xs font-semibold text-white"
-                >
-                  Explore
-                  <span className="grid size-5 place-items-center rounded-full bg-[#d9ff6b] text-[#141a0f]">
-                    <ArrowRight className="size-3" />
-                  </span>
+      <div role="tabpanel" aria-label={c.label} className="relative h-[460px] overflow-hidden rounded-3xl bg-[#0b0f08]">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={c.id}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {lead && (
+              // eslint-disable-next-line @next/next/no-img-element -- static thumbnail
+              <img src={`/thumbs/${lead.slug}.webp`} alt="" className="size-full object-cover" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+            <div className="absolute inset-x-6 bottom-6 text-white">
+              <p className="font-display text-5xl font-semibold tracking-tight">{c.count} components</p>
+              <p className="mt-2 max-w-sm text-sm text-white/80">{c.blurb}</p>
+              <div className="mt-4 flex gap-2">
+                {lead && (
+                  <Link href={`/components/${lead.slug}`} className="btn-glossy group inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-sm font-semibold">
+                    Open {lead.name}
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                )}
+                <Link href="/components" className="inline-flex h-9 items-center rounded-full px-4 text-sm font-semibold text-white hover:bg-white/15">
+                  View all
                 </Link>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <SideCard c={at(i + 1)} side="right" onPick={() => setI((i + 1) % n)} />
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

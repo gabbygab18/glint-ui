@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CATEGORIES, registry, type Category, type RegistryEntry } from "@/registry";
@@ -118,13 +119,13 @@ export function ComponentGrid() {
             <Button
               key={c.id}
               size="sm"
-              variant={on ? "default" : "outline"}
+              variant="ghost"
               aria-pressed={on}
               onClick={() => {
                 setCategory(c.id);
                 setPage(1);
               }}
-              className="rounded-full"
+              className={`rounded-full ${on ? "btn-ink text-white hover:text-white dark:text-[#141a0f] dark:hover:text-[#141a0f] dark:[background:#d9ff6b]" : "btn-glossy"}`}
             >
               {c.label} <span className="opacity-60">{count}</span>
             </Button>
@@ -141,17 +142,29 @@ export function ComponentGrid() {
         </div>
       ) : (
         <>
-          <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {visible.map((e) => {
-              const l = letterOf(e);
-              const anchor = sort === "az" && !seen.has(l) ? `letter-${l}` : undefined;
-              seen.add(l);
-              return (
-                <li key={e.slug} id={anchor} className="scroll-mt-24">
-                  <Card entry={e} />
-                </li>
-              );
-            })}
+          {/* Cards fade in from a soft blur and glide to new slots when the filter, sort or page changes. */}
+          <ul className="relative grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <AnimatePresence initial={false} mode="popLayout">
+              {visible.map((e, k) => {
+                const l = letterOf(e);
+                const anchor = sort === "az" && !seen.has(l) ? `letter-${l}` : undefined;
+                seen.add(l);
+                return (
+                  <motion.li
+                    key={e.slug}
+                    id={anchor}
+                    layout="position"
+                    className="scroll-mt-24"
+                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 0.96, filter: "blur(4px)", transition: { duration: 0.15 } }}
+                    transition={{ type: "spring", bounce: 0.15, duration: 0.45, delay: Math.min(k, 8) * 0.025 }}
+                  >
+                    <Card entry={e} />
+                  </motion.li>
+                );
+              })}
+            </AnimatePresence>
           </ul>
           <div className="mt-10 flex flex-col items-center gap-3">
             {pages > 1 && <Pagination total={pages} page={current} onPageChange={goTo} />}
@@ -170,7 +183,7 @@ function Card({ entry: e }: { entry: RegistryEntry }) {
   return (
     <Link
       href={`/components/${e.slug}`}
-      className="group block overflow-hidden rounded-3xl border bg-card transition-all hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-xl hover:shadow-black/5"
+      className="clay group block overflow-hidden rounded-[2rem] bg-card transition-transform hover:-translate-y-1"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-[oklch(0.12_0.004_110)]">
         {broken ? (

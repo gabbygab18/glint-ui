@@ -1,4 +1,3 @@
-import { ArrowRight, Check, FileCode2, Folder, Search, SlidersHorizontal, Terminal } from "@/components/site-icons";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CategoryShowcase, type ShowcaseCategory } from "@/components/category-showcase";
@@ -6,9 +5,15 @@ import { Cta } from "@/components/cta";
 import { Hero } from "@/components/hero";
 import { Logo } from "@/components/icons";
 import { InstallBuilder } from "@/components/install-builder";
+import { ArrowDot, ArrowRight, CheckCircle, Clock, Package, SlidersHorizontal, Star } from "@/components/site-icons";
 import { stackLogos } from "@/components/stack-logo";
-import { CATEGORIES, bySlug, inCategory, registry } from "@/registry";
+import { CATEGORIES, bySlug, categoryLabel, inCategory, registry } from "@/registry";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/registry/items/accordion/accordion";
 import { Marquee } from "@/registry/items/marquee/marquee";
+import { PinMatrix } from "@/registry/items/pin-matrix/pin-matrix";
+import { Tally } from "@/registry/items/tally/tally";
+
+const SECTION = "px-6 py-14 md:px-10 md:py-20";
 
 const BLURBS: Record<string, string> = {
   "text-animations": "Headlines that type, scramble, rise and roll into place.",
@@ -21,44 +26,42 @@ const BLURBS: Record<string, string> = {
   widgets: "Mascots, rings and playful widgets. Glint lives here.",
 };
 
-const REASONS = [
-  { tag: "Own it", body: "One file per component. No package to update, no wrapper API to learn." },
-  { tag: "shadcn", body: "Installs with the shadcn CLI and uses the same theme tokens, light and dark." },
-  { tag: "Fast", body: "Canvas and WebGL effects pause offscreen and respect reduced motion." },
-  { tag: "Accessible", body: "Real text for screen readers, keyboard support and visible focus." },
+const BUILDER = ["frost-tiles", "letter-rise", "bloom-menu", "skeleton-swap", "price-toggle", "pin-matrix", "tilt-card", "glint-bot"];
+const LATEST = ["bloom-menu", "size-shift", "reaction-bar", "price-toggle", "goal-ring"];
+
+const FAQS = [
+  { q: "Is Glint UI really free?", a: "Yes. Every component is free to use in personal and commercial projects. There is no sign-up and no paid tier." },
+  { q: "Do I need shadcn/ui?", a: "No. You can copy any component by hand. The shadcn CLI just makes installing faster and pulls in the npm packages a component needs." },
+  { q: "Will it match my theme?", a: "Components use the shadcn color tokens, like bg-card and text-muted-foreground, so they follow your light, dark and custom themes." },
+  { q: "Does it work with reduced motion?", a: "Yes. Animations respect prefers-reduced-motion, and canvas or WebGL effects draw a single still frame instead." },
+  { q: "Can I change the code?", a: "That is the point. Each component is one file in your project. Rename it, restyle it, delete what you don't need." },
+  { q: "Which React versions are supported?", a: "React 19 with Tailwind CSS v4. Most components also run on React 18 with small changes." },
 ];
 
-const BUILDER = ["frost-tiles", "letter-rise", "bloom-menu", "skeleton-swap", "price-toggle", "pin-matrix", "tilt-card", "glint-bot"];
-
-/** Small centered pill with the logo, above each section title. */
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="mx-auto flex w-fit items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
+    <span className="btn-glossy inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-muted-foreground">
       <Logo className="size-3.5" />
       {children}
     </span>
   );
 }
 
-function SectionTitle({ eyebrow, title, accent, body }: { eyebrow: string; title: string; accent: string; body?: string }) {
+function SplitHeading({ eyebrow, title, text, href }: { eyebrow: string; title: string; text: string; href?: string }) {
   return (
-    <div className="mx-auto max-w-2xl text-center">
-      <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mt-5 text-balance font-display text-4xl font-bold tracking-tight sm:text-5xl">
-        {title} <span className="text-highlight">{accent}</span>
-      </h2>
-      {body && <p className="mx-auto mt-4 max-w-xl text-balance text-muted-foreground">{body}</p>}
-    </div>
-  );
-}
-
-/** A soft tile holding a tiny mock of the product, with a title and line under it. */
-function ToolCard({ title, body, children }: { title: string; body: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col rounded-3xl bg-muted/60 p-5 sm:p-6">
-      <div className="flex-1 rounded-2xl border bg-background p-4 shadow-sm">{children}</div>
-      <h3 className="mt-6 font-display text-lg font-bold">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
+    <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div>
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 className="mt-3 max-w-md font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">{title}</h2>
+      </div>
+      <div className="max-w-xs">
+        <p className="text-sm leading-relaxed text-muted-foreground">{text}</p>
+        {href && (
+          <Link href={href} className="group mt-2 inline-flex items-center gap-1 text-sm font-medium hover:underline">
+            View all <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
@@ -67,189 +70,314 @@ export default function Home() {
   const showcase: ShowcaseCategory[] = CATEGORIES.flatMap((c) => {
     const items = inCategory(c.id);
     if (!items.length) return [];
-    return [{ id: c.id, label: c.label, icon: c.icon, count: items.length, blurb: BLURBS[c.id] ?? "", examples: items.slice(0, 4).map((e) => ({ slug: e.slug, name: e.name })) }];
+    return [{ id: c.id, label: c.label, count: items.length, blurb: BLURBS[c.id] ?? "", examples: items.slice(0, 4).map((e) => ({ slug: e.slug, name: e.name })) }];
   });
-  const builderItems = BUILDER.flatMap((slug) => {
-    const e = bySlug.get(slug);
-    return e ? [{ slug, name: e.name, dependencies: e.dependencies ?? [] }] : [];
-  });
+  const pick = (slugs: string[]) => slugs.flatMap((s) => (bySlug.has(s) ? [bySlug.get(s)!] : []));
+  const latest = pick(LATEST);
+  const builderItems = pick(BUILDER).map((e) => ({ slug: e.slug, name: e.name, dependencies: e.dependencies ?? [] }));
 
   return (
-    <main>
-      <Hero count={registry.length} categories={showcase.length} />
+    <main className="mx-auto w-full max-w-[1240px]">
+      <Hero
+        count={registry.length}
+        categories={showcase.length}
+        recent={latest.slice(0, 2).map((e) => ({ slug: e.slug, name: e.name, category: categoryLabel(e.category) }))}
+      />
 
-      <section aria-label="Built with" className="py-10">
-        <Marquee items={stackLogos} speed={50} hoverSpeed={0} gap={72} ariaLabel="Built with" />
+      <section aria-label="Built with" className="pb-16">
+        <p className="px-6 pb-6 text-center text-sm text-muted-foreground">
+          <span className="font-medium text-highlight">Built with the tools</span> fast teams already use
+        </p>
+        <div className="border-y py-5">
+          <Marquee items={stackLogos} speed={40} hoverSpeed={0} gap={64} ariaLabel="Built with" />
+        </div>
       </section>
 
-      {/* About: stat tiles beside the reasons, like a product fact sheet. */}
-      <section className="relative">
-        <div aria-hidden className="grid-lines absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
-          <SectionTitle
-            eyebrow="Why Glint"
-            title="Motion that ships,"
-            accent="code you keep"
-            body="Every component is plain React and Tailwind in a single file. Install it, read it, change it."
-          />
-          <div className="mt-14 grid items-center gap-16 lg:grid-cols-2 lg:gap-12">
-            <div className="relative mx-auto w-full max-w-md">
-              <div className="aspect-[4/3] rounded-[2rem] border bg-gradient-to-br from-primary/25 via-card to-card p-8 sm:p-10">
-                <Logo className="size-20 drop-shadow-[0_18px_30px_rgba(120,160,20,0.35)] sm:size-28" />
-              </div>
-              <dl
-                className="dark absolute -bottom-8 -right-2 grid w-60 grid-cols-2 gap-2 rounded-2xl p-2 text-white shadow-2xl sm:-right-8"
-                style={{ background: "linear-gradient(160deg, oklch(0.24 0.035 128), oklch(0.16 0.02 125))" }}
-              >
+      <section aria-label="Glint UI in numbers" className="px-6 pb-8 md:px-10">
+        <dl className="grid grid-cols-2 gap-y-8 md:grid-cols-4">
+          {[
+            { value: registry.length, label: "Components", note: "Free for any project" },
+            { value: showcase.length, label: "Categories", note: "Text to widgets" },
+            { value: 1, label: "File each", note: "Nothing to keep in sync" },
+            { value: 2, label: "Themes", note: "Light and dark built in" },
+          ].map((s, k) => (
+            <div key={s.label} className={`flex flex-col px-5 ${k % 2 ? "border-l" : ""} ${k === 2 ? "md:border-l" : ""}`}>
+              <dt className="order-2 mt-2 text-sm font-medium">{s.label}</dt>
+              <dd className="order-1 font-display text-4xl font-semibold tracking-tight">
+                <Tally to={s.value} duration={1600} />
+              </dd>
+              <dd className="order-3 text-xs text-muted-foreground">{s.note}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Why Glint: three cards, each with a small product mock. */}
+      <section className={SECTION}>
+        <div className="text-center">
+          <Eyebrow>Why Glint</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight md:text-4xl">Everything for Smarter Interfaces</h2>
+          <p className="mt-3 text-sm text-muted-foreground">Motion that ships fast, stays accessible and costs nothing.</p>
+        </div>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="clay-well rounded-[2rem] p-5">
+            <span className="btn-glossy grid size-11 place-items-center rounded-2xl">
+              <SlidersHorizontal className="size-5" />
+            </span>
+            <h3 className="mt-3 font-semibold">Live Playground</h3>
+            <p className="text-xs text-muted-foreground">Tune every prop before you copy.</p>
+            <div className="mt-5 space-y-4 rounded-2xl bg-card p-4">
+              <p className="text-xs font-semibold">Tilt Card</p>
+              {[
+                ["Max tilt", 72],
+                ["Scale", 40],
+                ["Glare", 85],
+              ].map(([n, v]) => (
+                <div key={n}>
+                  <div className="flex justify-between text-[11px] text-muted-foreground">
+                    <span>{n}</span>
+                    <span>{v}%</span>
+                  </div>
+                  <div className="mt-1.5 h-1.5 rounded-full bg-muted">
+                    <div className="h-full rounded-full bg-[#141a0f] dark:bg-[#d9ff6b]" style={{ width: `${v}%` }} />
+                  </div>
+                </div>
+              ))}
+              <Link href="/components/tilt-card" className="btn-glossy block rounded-full py-2 text-center text-xs font-semibold">
+                Open Playground
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative min-h-[380px] overflow-hidden rounded-3xl bg-[#0b0f08] p-5 text-white">
+            {/* A live component, not a picture: the dots light up under the pointer. */}
+            <div className="absolute inset-0">
+              <PinMatrix gap={22} dotSize={2} baseColor="#2e3a1f" activeColor="#d9ff6b" proximity={140} />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0b0f08] via-[#0b0f08]/40 to-transparent" />
+            <span className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-white/10 px-3 py-1 text-[11px] text-white/80 backdrop-blur">
+              Live: Pin Matrix · move your cursor here
+            </span>
+            <div className="pointer-events-none relative">
+              <span className="grid size-11 place-items-center rounded-2xl bg-[#d9ff6b] text-[#141a0f]">
+                <Package className="size-5" />
+              </span>
+              <h3 className="mt-3 text-lg font-semibold">{registry.length} Free Components</h3>
+              <p className="max-w-[220px] text-xs text-white/80">Text, motion, backgrounds, UI and mascots. Glint included.</p>
+            </div>
+          </div>
+
+          <div className="clay-well rounded-[2rem] p-5">
+            <span className="btn-glossy grid size-11 place-items-center rounded-2xl">
+              <CheckCircle className="size-5" />
+            </span>
+            <h3 className="mt-3 font-semibold">Install in One Line</h3>
+            <p className="text-xs text-muted-foreground">The shadcn CLI does the copying for you.</p>
+            <div className="mt-5 rounded-2xl bg-card p-4 text-center">
+              <CheckCircle className="mx-auto size-10 text-emerald-500" />
+              <p className="mt-2 text-sm font-semibold">Component Installed</p>
+              <p className="font-mono text-[11px] text-muted-foreground">@glint-ui/frost-tiles</p>
+              <dl className="mt-4 space-y-2 text-left text-[11px]">
                 {[
-                  { value: `${registry.length}`, label: "Components" },
-                  { value: `${showcase.length}`, label: "Categories" },
-                  { value: "1", label: "File each" },
-                  { value: "2", label: "Themes" },
-                ].map((s) => (
-                  <div key={s.label} className="rounded-xl bg-white/[0.06] p-3">
-                    <dt className="text-[11px] text-white/60">{s.label}</dt>
-                    <dd className="font-display text-2xl font-bold text-[#d9ff6b]">{s.value}</dd>
+                  ["File", "components/ui/frost-tiles.tsx"],
+                  ["Packages", "None"],
+                  ["Lock-in", "Zero"],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-2">
+                    <dt className="text-muted-foreground">{k}</dt>
+                    <dd className="truncate font-medium">{v}</dd>
                   </div>
                 ))}
               </dl>
-            </div>
-
-            <div>
-              <h3 className="font-display text-2xl font-bold">Built to be copied</h3>
-              <ul className="mt-6 grid gap-4">
-                {REASONS.map((r) => (
-                  <li key={r.tag} className="flex items-start gap-4">
-                    <span className="w-24 shrink-0 rounded-full bg-highlight/12 px-3 py-1 text-center text-xs font-semibold text-highlight">{r.tag}</span>
-                    <p className="text-sm leading-relaxed text-muted-foreground">{r.body}</p>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/docs"
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#141a0f] py-2 pl-5 pr-2 text-sm font-semibold text-white"
-              >
-                Read the docs
-                <span className="grid size-7 place-items-center rounded-full bg-[#d9ff6b] text-[#141a0f]">
-                  <ArrowRight className="size-3.5" />
-                </span>
+              <Link href="/docs/installation" className="btn-glossy mt-4 block rounded-full py-2 text-xs font-semibold">
+                Read the Setup
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 sm:py-24">
-        <SectionTitle eyebrow="Categories" title="Everything that moves," accent="sorted for you" />
-        <div className="mt-10">
-          <CategoryShowcase categories={showcase} />
-        </div>
-      </section>
-
-      {/* How it works: four tiles, each with a tiny mock of that step. */}
-      <section className="px-4 py-10 sm:px-6">
-        <div className="mx-auto max-w-6xl rounded-[2.25rem] border bg-card px-5 py-16 shadow-sm sm:px-10">
-          <SectionTitle
-            eyebrow="How it works"
-            title="From idea to your repo,"
-            accent="in minutes"
-            body="Everything happens in the browser and one terminal command."
-          />
-          <div className="mt-12 grid gap-4 md:grid-cols-2">
-            <ToolCard title="Find it fast" body="Search all components with Ctrl K, or browse by category.">
-              <div className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm text-muted-foreground">
-                <Search className="size-4" /> tilt
-                <span className="ml-auto rounded border px-1.5 text-[10px]">Ctrl K</span>
-              </div>
-              <ul className="mt-3 grid gap-1.5 text-sm">
-                {[
-                  ["Tilt Card", "Components"],
-                  ["Tilt Blocks", "Animations"],
-                  ["Lean Card", "Components"],
-                ].map(([n, c], k) => (
-                  <li key={n} className={`flex items-center justify-between rounded-lg px-3 py-2 ${k === 0 ? "bg-muted" : ""}`}>
-                    {n}
-                    <span className="text-xs text-muted-foreground">{c}</span>
+      {/* Features: two tall cards with product mocks. */}
+      <section className={SECTION}>
+        <SplitHeading
+          eyebrow="Library Features"
+          title="Everything You Need to Ship Motion"
+          href="/components"
+          text="Organized categories, live previews and a playground for every component, all free."
+        />
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          <div className="clay-well flex h-[560px] flex-col overflow-hidden rounded-[2rem] px-8 pt-8">
+            <h3 className="text-xl font-semibold">Organized by Category</h3>
+            <p className="mt-1 max-w-sm text-sm text-muted-foreground">{showcase.length} categories, from headline effects to full widgets, each with a live preview.</p>
+            <div className="clay relative mx-auto mt-8 w-[280px] flex-1 rounded-t-[2rem] border-b-0 bg-card p-4">
+              <p className="text-xs text-muted-foreground">Library</p>
+              <p className="text-2xl font-semibold tracking-tight">{registry.length} components</p>
+              <ul className="mt-3 space-y-2">
+                {showcase.map((c, k) => (
+                  <li key={c.id} className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-2">
+                      <span className="grid size-5 place-items-center rounded-full bg-muted text-[10px] font-semibold">{k + 1}</span>
+                      {c.label}
+                    </span>
+                    <span className="text-muted-foreground">{c.count}</span>
                   </li>
                 ))}
               </ul>
-            </ToolCard>
+            </div>
+          </div>
 
-            <ToolCard title="Tweak it live" body="Every prop has a control, so you can tune it before you copy.">
-              <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                <SlidersHorizontal className="size-3.5" /> Playground
-              </div>
-              {[
-                ["Strength", "72%"],
-                ["Speed", "40%"],
-              ].map(([n, w]) => (
-                <div key={n} className="mt-4">
-                  <div className="flex justify-between text-xs">
-                    <span>{n}</span>
-                    <span className="text-muted-foreground">{w}</span>
-                  </div>
-                  <div className="mt-2 h-1.5 rounded-full bg-muted">
-                    <div className="relative h-full rounded-full bg-primary" style={{ width: w }}>
-                      <span className="absolute -right-2 -top-1 size-3.5 rounded-full border-2 border-primary bg-background" />
-                    </div>
-                  </div>
-                </div>
+          <div className="clay-well flex h-[560px] flex-col overflow-hidden rounded-[2rem] px-8 pt-8">
+            <h3 className="text-xl font-semibold">Live Previews</h3>
+            <p className="mt-1 max-w-sm text-sm text-muted-foreground">Every component runs right on its page. Hover it, drag it, change its props, then copy.</p>
+            <div className="relative mx-auto mt-10 h-72 w-full max-w-sm">
+              {latest.slice(0, 3).map((e, k) => (
+                <Link
+                  key={e.slug}
+                  href={`/components/${e.slug}`}
+                  className="clay absolute inset-x-0 top-0 overflow-hidden rounded-[1.5rem] bg-card p-2 transition-transform duration-300 hover:-translate-y-2"
+                  style={{ transform: `translateY(${k * 26}px) scale(${1 - (2 - k) * 0.05})`, zIndex: k }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail */}
+                  <img src={`/thumbs/${e.slug}.webp`} alt="" className="aspect-[16/10] w-full rounded-[1.1rem] object-cover" />
+                  <p className="flex items-center justify-between px-2 pt-2 text-sm font-semibold">
+                    {e.name}
+                    <span className="text-xs font-normal text-muted-foreground">{categoryLabel(e.category)}</span>
+                  </p>
+                </Link>
               ))}
-              <div className="mt-4 flex items-center justify-between text-xs">
-                Glare
-                <span className="flex h-5 w-9 items-center justify-end rounded-full bg-primary p-0.5">
-                  <span className="size-4 rounded-full bg-background" />
-                </span>
-              </div>
-            </ToolCard>
-
-            <ToolCard title="Install with one command" body="The shadcn CLI adds the file and any npm packages it needs.">
-              <div className="rounded-xl bg-[#141a0f] p-3 font-mono text-xs leading-6 text-white/80">
-                <p>
-                  <span className="text-[#d9ff6b]">$</span> npx shadcn add @glint-ui/tilt-card
-                </p>
-                <p className="flex items-center gap-1.5 text-white/60">
-                  <Check className="size-3 text-[#d9ff6b]" /> Created components/ui/tilt-card.tsx
-                </p>
-                <p className="flex items-center gap-1.5 text-white/60">
-                  <Check className="size-3 text-[#d9ff6b]" /> Installed motion
-                </p>
-                <p className="flex items-center gap-1.5 text-white/60">
-                  <Terminal className="size-3" /> Done
-                </p>
-              </div>
-            </ToolCard>
-
-            <ToolCard title="Own the code" body="It is a normal file in your project. Change anything, nothing to keep in sync.">
-              <ul className="grid gap-1 font-mono text-xs">
-                <li className="flex items-center gap-2 text-muted-foreground">
-                  <Folder className="size-3.5" /> components/ui
-                </li>
-                {["button.tsx", "tilt-card.tsx", "dialog.tsx"].map((f) => (
-                  <li
-                    key={f}
-                    className={`ml-4 flex items-center gap-2 rounded-lg px-2 py-1.5 ${f === "tilt-card.tsx" ? "bg-highlight/12 font-semibold text-highlight" : "text-muted-foreground"}`}
-                  >
-                    <FileCode2 className="size-3.5" /> {f}
-                    {f === "tilt-card.tsx" && <span className="ml-auto rounded-full bg-highlight px-1.5 text-[10px] text-background">yours</span>}
-                  </li>
-                ))}
-              </ul>
-            </ToolCard>
+            </div>
+            <div className="mb-5 mt-auto flex justify-end">
+              <span className="btn-ink flex items-center gap-2 rounded-full px-3 py-1 text-xs">
+                <Star className="size-3.5 text-[#d9ff6b]" />
+                {registry.length} previews · playground
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
-        <SectionTitle
-          eyebrow="Install builder"
-          title="Build your command"
-          accent="before you install"
-          body="Pick a few components and a package manager. Copy the line, paste it in your terminal."
-        />
-        <div className="mt-12">
+      <section className={`${SECTION} clay-well mx-2 rounded-[2rem] md:mx-4`}>
+        <div className="mb-8">
+          <Eyebrow>Categories</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight md:text-4xl">Your Complete Motion Library</h2>
+        </div>
+        <CategoryShowcase categories={showcase} />
+      </section>
+
+      {/* Newest components, laid out like a list of episodes. */}
+      <section className={SECTION}>
+        <SplitHeading eyebrow="Just Added" title="Fresh Components This Month" href="/components" text="New pieces land often. Each one is original, documented and ready to install." />
+        <div className="mt-10 space-y-4">
+          {latest.map((e) => (
+            <Link key={e.slug} href={`/components/${e.slug}`} className="clay-well group grid gap-5 rounded-[2rem] p-3 md:grid-cols-[260px_1fr]">
+              <div className="relative aspect-video overflow-hidden rounded-2xl bg-[#0b0f08]">
+                {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail */}
+                <img src={`/thumbs/${e.slug}.webp`} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+              <div className="flex flex-col justify-between gap-4 py-2 pr-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">New · {categoryLabel(e.category)}</p>
+                  <p className="mt-2 font-display text-xl font-semibold leading-snug md:text-2xl">{e.name}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{e.description}</p>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{e.dependencies?.length ? e.dependencies.join(" · ") : "No dependencies"}</span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="size-3.5" /> Ready to install
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Three ways in, each shown as the actual code you would write. */}
+      <section className={`${SECTION} clay-well mx-2 rounded-[2rem] md:mx-4`}>
+        <SplitHeading eyebrow="Ways to Use It" title="Three Ways In, Same Result" text="Copy one file, install with the CLI, or start from a preset and change it. You always end up owning the code." />
+        <ol className="mt-10 grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Copy the file",
+              note: "No setup. Open a component, copy its source, paste it into your project.",
+              file: "components/ui/tilt-card.tsx",
+              code: [["", "export function TiltCard({"], ["", "  maxTilt = 12, glare = true,"], ["", "}: TiltCardProps) { … }"]],
+              href: "/components",
+              cta: "Browse components",
+            },
+            {
+              title: "Install with the CLI",
+              note: "One command adds the file and any npm packages it needs.",
+              file: "terminal",
+              code: [["$", "npx shadcn@latest add \\"], ["", "  @glint-ui/tilt-card"], ["✓", "Created tilt-card.tsx"]],
+              href: "/docs/installation",
+              cta: "Set up the CLI",
+              popular: true,
+            },
+            {
+              title: "Make it yours",
+              note: "Change props, classes or the code itself. It follows your shadcn theme.",
+              file: "app/page.tsx",
+              code: [["", "<TiltCard maxTilt={18}"], ["", "  className=\"rounded-3xl\">"], ["", "  …</TiltCard>"]],
+              href: "/docs",
+              cta: "Read the docs",
+            },
+          ].map((w, k) => (
+            <li key={w.title} className="clay flex flex-col rounded-3xl bg-card p-6">
+              <div className="flex items-center justify-between">
+                <span className="btn-glossy grid size-10 place-items-center rounded-full font-display text-sm font-semibold">{String(k + 1).padStart(2, "0")}</span>
+                {w.popular && <span className="rounded-full bg-[#d9ff6b] px-2.5 py-0.5 text-[11px] font-semibold text-[#141a0f]">Most popular</span>}
+              </div>
+              <h3 className="mt-5 font-display text-xl font-semibold">{w.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{w.note}</p>
+              <div className="mt-6 flex-1 overflow-hidden rounded-2xl bg-[#0b0f08] font-mono text-[12px] leading-6 text-white/85">
+                <p className="border-b border-white/10 px-4 py-2 text-[11px] text-white/45">{w.file}</p>
+                <pre className="overflow-x-auto px-4 py-3">
+                  {w.code.map(([mark, line], j) => (
+                    <span key={j} className="block">
+                      <span className="inline-block w-4 text-[#d9ff6b]">{mark}</span>
+                      {line}
+                    </span>
+                  ))}
+                </pre>
+              </div>
+              <Link href={w.href} className="btn-ink group mt-5 flex h-11 items-center justify-between rounded-full pl-5 pr-2 text-sm font-semibold">
+                {w.cta}
+                <ArrowDot />
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className={SECTION}>
+        <SplitHeading eyebrow="Install Builder" title="Build Your Command Before You Install" text="Pick a few components and a package manager. Copy the line, paste it in your terminal." />
+        <div className="mt-10">
           <InstallBuilder items={builderItems} />
         </div>
+      </section>
+
+      <section className={`${SECTION} grid gap-10 md:grid-cols-[0.8fr_1.2fr]`}>
+        <div>
+          <Eyebrow>FAQ</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">Frequently Asked Questions</h2>
+          <p className="mt-3 max-w-xs text-sm text-muted-foreground">Everything you need to know before your first install.</p>
+          <Link href="/docs" className="btn-ink group mt-6 inline-flex h-11 items-center gap-2 rounded-full pl-5 pr-2 text-sm font-semibold">
+            Read the Docs
+            <ArrowDot />
+          </Link>
+        </div>
+        <Accordion defaultValue={["q0"]} className="clay-well rounded-[2rem] px-5 py-1">
+          {FAQS.map((f, k) => (
+            <AccordionItem key={f.q} value={`q${k}`}>
+              <AccordionTrigger>
+                <span className="mr-3 text-xs text-muted-foreground">{String(k + 1).padStart(2, "0")}</span>
+                {f.q}
+              </AccordionTrigger>
+              <AccordionContent>{f.a}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </section>
 
       <Cta />

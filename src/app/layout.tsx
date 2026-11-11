@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-dvh flex-col bg-background font-sans text-foreground">{children}</body>
+      <body className="flex min-h-dvh flex-col bg-[var(--page)] font-sans text-foreground">{children}</body>
     </html>
   );
 }

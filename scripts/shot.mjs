@@ -115,6 +115,8 @@ if (process.env.CLICK) {
   await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
   await sleep(900);
 }
+// Hide the Next.js dev-mode badge so captures from `next dev` match production.
+await send("Runtime.evaluate", { expression: 'document.querySelectorAll("nextjs-portal").forEach((e) => e.remove())' });
 const format = out.endsWith(".webp") ? "webp" : "png";
 const shot = await send("Page.captureScreenshot", { format, quality: format === "webp" ? 80 : undefined });
 writeFileSync(out, Buffer.from(shot.data, "base64"));

@@ -1,161 +1,142 @@
-"use client";
-
-import { ArrowRight, Box, Check, Layers, Sparkles, Terminal, Type } from "@/components/site-icons";
 import Link from "next/link";
-import { useRef, type CSSProperties, type PointerEvent } from "react";
+import { ArrowRight, Bell, Copy, Search, SlidersHorizontal, Terminal } from "@/components/site-icons";
 import { GlintBot } from "@/registry/items/glint-bot/glint-bot";
-import { buttonVariants } from "@/registry/items/button/button";
-import { Header } from "./header";
+import { NorthGlow } from "@/registry/items/north-glow/north-glow";
+import { Logo } from "./icons";
 
-// Floating cards drift against the pointer at different depths.
-const depth = (px: number): CSSProperties => ({
-  transform: `translate3d(calc(var(--px, 0) * ${px}px), calc(var(--py, 0) * ${px}px), 0)`,
-  transition: "transform 0.4s cubic-bezier(.2,.7,.2,1)",
-});
+export interface HeroItem {
+  slug: string;
+  name: string;
+  category: string;
+}
 
-// A few lit grid cells, placed on the 64px grid so they line up with the lines.
-const CELLS = [
-  [3, 1],
-  [12, 1],
-  [14, 2],
-  [8, 6],
-  [17, 7],
-  [1, 8],
-];
-
-const TRUST = ["One file per component", "Works with the shadcn CLI", "Free and open source"];
-
-export function Hero({ count, categories }: { count: number; categories: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: PointerEvent<HTMLDivElement>) => {
-    const el = ref.current!;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--px", `${((e.clientX - r.left) / r.width - 0.5) * 2}`);
-    el.style.setProperty("--py", `${((e.clientY - r.top) / r.height - 0.5) * 2}`);
-  };
-
+/** Centered intro, then a photo-style card and a lit lime panel with an app mock. */
+export function Hero({ count, categories, recent }: { count: number; categories: number; recent: HeroItem[] }) {
   return (
-    <section className="px-2 pt-2 sm:px-3 sm:pt-3">
-      {/* The card is always dark, like a brand-colored panel, in both site themes. */}
-      <div
-        ref={ref}
-        onPointerMove={onMove}
-        className="dark relative isolate overflow-hidden rounded-[1.75rem] text-foreground sm:rounded-[2.25rem]"
-        style={{
-          background:
-            "radial-gradient(900px circle at 78% 18%, oklch(0.42 0.12 128 / 0.55), transparent 60%), radial-gradient(700px circle at 8% 100%, oklch(0.32 0.07 150 / 0.5), transparent 60%), linear-gradient(160deg, oklch(0.23 0.035 128), oklch(0.16 0.02 125))",
-        }}
-      >
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, oklch(1 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, oklch(1 0 0 / 0.05) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-          }}
+    <section className="pb-10">
+      <div className="mx-auto max-w-3xl px-6 pt-14 text-center">
+        <Link
+          href="/components"
+          className="btn-glossy inline-flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          {CELLS.map(([x, y]) => (
-            <span key={`${x}-${y}`} className="absolute size-16 bg-white/[0.035]" style={{ left: x * 64, top: y * 64 }} />
-          ))}
+          <span className="rounded-full bg-[#141a0f] px-2.5 py-0.5 text-xs font-semibold text-[#d9ff6b]">Free</span>
+          {count} components, {categories} categories, 1 CLI
+          <ArrowRight className="size-3.5" />
+        </Link>
+        <h1 className="mt-6 text-balance font-display text-4xl font-semibold leading-[1.06] tracking-tight md:text-[58px]">
+          The Modern Way to Build <br className="hidden sm:block" />
+          Interfaces That <span className="text-highlight">Move.</span>
+        </h1>
+        <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-muted-foreground">
+          Text effects, cursors, WebGL backgrounds and UI with motion built in. Copy a component or install it with the
+          shadcn CLI, and the code is yours.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link href="/components" className="btn-ink inline-flex h-11 items-center rounded-full px-6 text-sm font-semibold transition-[filter] hover:brightness-125">
+            Browse Components
+          </Link>
+          <Link href="/docs/installation" className="btn-glossy inline-flex h-11 items-center rounded-full px-6 text-sm font-semibold">
+            See How It Works
+          </Link>
+        </div>
+      </div>
+
+      <div className="mt-12 grid gap-4 px-4 md:grid-cols-[1fr_2.1fr] md:px-10">
+        {/* Left: a live background component with the newest components floating on top. */}
+        <div className="clay rounded-[2.5rem] bg-card p-2.5">
+          <div className="relative h-[340px] overflow-hidden rounded-[2rem] bg-[#0b0f08]">
+            <NorthGlow colors={["#b5e61d", "#2dd4bf", "#365314"]} />
+            <div className="absolute inset-x-4 bottom-4 space-y-2">
+              {recent.map((r) => (
+                <Link
+                  key={r.slug}
+                  href={`/components/${r.slug}`}
+                  className="flex items-center gap-3 rounded-[1.25rem] bg-white/95 p-2.5 text-neutral-900 shadow-[0_10px_24px_-12px_rgb(15_23_42/0.4)] backdrop-blur transition-transform hover:-translate-y-0.5"
+                >
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#d9ff6b]">
+                    <Logo className="size-6" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-xs">
+                    <span className="block truncate font-semibold">{r.name}</span>
+                    <span className="block truncate text-neutral-500">New in {r.category}</span>
+                  </span>
+                  <span className="text-xs font-semibold">New</span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <Header inset />
-
-        <div className="mx-auto grid max-w-[90rem] items-center gap-10 px-6 pb-16 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:pb-20">
-          <div className="min-w-0">
-            <Link
-              href="/components"
-              className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] py-1 pl-1 pr-3 text-xs text-white/80 backdrop-blur hover:text-white"
-            >
-              <span className="rounded-full bg-primary px-2 py-0.5 font-semibold text-primary-foreground">{count}</span>
-              animated components for <span className="font-semibold text-white">React</span>
-              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-
-            <h1 className="mt-7 max-w-2xl text-balance font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl xl:text-7xl">
-              Interfaces that move, <span className="text-primary">yours in one paste</span>
-            </h1>
-
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70">
-              Text effects, cursors, WebGL backgrounds, UI and mascots. Pick one, install it with the shadcn CLI, and
-              the code lives in your project.
-            </p>
-
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Link
-                href="/components"
-                className={buttonVariants({ size: "lg", className: "group rounded-full px-7 text-sm font-semibold shadow-[0_10px_30px_-10px_var(--primary)]" })}
-              >
-                Browse components
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-              <Link
-                href="/docs/installation"
-                className="inline-flex h-10 items-center rounded-full border border-white/25 px-7 text-sm font-semibold text-white transition-colors hover:bg-white/10 sm:h-11"
-              >
-                Get started
-              </Link>
+        {/* Right: lit lime panel, an app mock rising from the bottom, Glint keeping watch. */}
+        <div className="clay rounded-[2.5rem] bg-card p-2.5">
+          <div className="lime-glow relative flex h-[340px] items-end justify-center overflow-hidden rounded-[2rem]">
+            <span className="glass-pill absolute left-6 top-6 hidden rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#141a0f] sm:inline-flex">
+              Your project
+            </span>
+            <div className="absolute -bottom-6 left-2 hidden lg:block">
+              <GlintBot size={200} wave label="Glint, waving hello" />
             </div>
-
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
-              {TRUST.map((t) => (
-                <li key={t} className="flex items-center gap-2">
-                  <span className="grid size-4 place-items-center rounded-full bg-primary text-primary-foreground">
-                    <Check className="size-2.5" strokeWidth={4} />
-                  </span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Glint with a soft glow and floating cards, like a product shot. */}
-          <div className="relative mx-auto aspect-square w-full max-w-[32rem]">
-            <div aria-hidden className="absolute inset-[22%] rounded-full bg-primary/20 blur-[70px]" style={depth(-12)} />
-            <div className="absolute inset-0 grid place-items-center" style={depth(6)}>
-              <GlintBot size={330} wave className="max-w-full drop-shadow-2xl" label="Glint, waving hello" />
-            </div>
-
-            <div
-              className="absolute right-0 top-[6%] flex items-center gap-3 rounded-2xl bg-white px-3.5 py-2.5 text-neutral-900 shadow-2xl"
-              style={depth(18)}
-            >
-              <span className="flex -space-x-2">
-                {[
-                  { Icon: Type, bg: "bg-[#b5e61d]" },
-                  { Icon: Sparkles, bg: "bg-[#38bdf8]" },
-                  { Icon: Layers, bg: "bg-[#f59e0b]" },
-                  { Icon: Box, bg: "bg-[#a78bfa]" },
-                ].map(({ Icon, bg }, i) => (
-                  <span key={i} className={`grid size-7 place-items-center rounded-full ring-2 ring-white ${bg}`}>
-                    <Icon className="size-3.5 text-neutral-900" />
-                  </span>
-                ))}
-              </span>
-              <span className="leading-tight">
-                <span className="block text-sm font-bold">{count}+ components</span>
-                <span className="block text-[11px] text-neutral-500">{categories} categories</span>
-              </span>
-            </div>
-
-            <div
-              className="absolute bottom-[8%] left-0 flex items-center gap-3 rounded-2xl bg-white py-2.5 pl-2.5 pr-3 text-neutral-900 shadow-2xl"
-              style={depth(-22)}
-            >
-              <span className="grid size-8 place-items-center rounded-xl bg-[#141a0f] text-[#d9ff6b]">
-                <Terminal className="size-4" />
-              </span>
-              <span className="leading-tight">
-                <span className="block text-[11px] text-neutral-500">Installed</span>
-                <span className="block font-mono text-xs font-semibold">@glint-ui/frost-tiles</span>
-              </span>
-              <span className="ml-2 rounded-full bg-[#ecfccb] px-2 py-0.5 text-[10px] font-semibold text-[#3f6212]">Just now</span>
+            <AppCard />
+            <div className="clay absolute bottom-14 right-6 hidden w-48 rounded-[1.5rem] bg-card p-4 xl:block">
+              <div className="flex justify-between text-xs">
+                <span className="font-medium">Bundle added</span>
+                <span className="text-muted-foreground">4 files</span>
+              </div>
+              <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-muted">
+                <div className="h-full w-2/3 rounded-full bg-[#141a0f] dark:bg-[#d9ff6b]" />
+              </div>
+              <p className="mt-2 text-[11px] text-muted-foreground">No runtime package</p>
             </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function AppCard() {
+  const actions = [
+    { Icon: Search, label: "Find" },
+    { Icon: SlidersHorizontal, label: "Tweak" },
+    { Icon: Copy, label: "Copy" },
+    { Icon: Terminal, label: "Install" },
+  ];
+  return (
+    <div className="clay relative z-10 w-[300px] rounded-t-[2rem] border-b-0 bg-card p-4 text-foreground">
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-2 text-xs font-semibold">
+          <Logo className="size-7" />
+          My App
+        </span>
+        <Bell className="size-4 text-muted-foreground" />
+      </div>
+      <div className="clay-well mt-4 rounded-[1.5rem] p-3.5">
+        <p className="text-[11px] text-muted-foreground">components/ui</p>
+        <div className="mt-1 flex items-end justify-between">
+          <p className="text-2xl font-semibold tracking-tight">4 installed</p>
+          <span className="text-[11px] text-muted-foreground">all yours</span>
+        </div>
+        <div className="mt-3 grid grid-cols-4 gap-1 text-center text-[10px] text-muted-foreground">
+          {actions.map(({ Icon, label }) => (
+            <div key={label} className="flex flex-col items-center gap-1">
+              <span className="btn-glossy grid size-9 place-items-center rounded-full">
+                <Icon className="size-4" />
+              </span>
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="clay-well mt-3 flex items-center gap-3 rounded-[1.5rem] p-3">
+        <span className="btn-ink grid size-9 shrink-0 place-items-center rounded-full">
+          <Terminal className="size-3.5" />
+        </span>
+        <div className="min-w-0 text-xs">
+          <p className="font-semibold">Last installed</p>
+          <p className="truncate font-mono text-muted-foreground">@glint-ui/bloom-menu</p>
+        </div>
+        <ArrowRight className="ml-auto size-4 shrink-0" />
+      </div>
+    </div>
   );
 }
