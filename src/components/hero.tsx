@@ -111,9 +111,8 @@ export function Hero({ count, categories }: { count: number; categories: number 
             </ul>
           </div>
 
-          {/* Glint on a halo, with floating cards like a product shot. */}
+          {/* Glint with a soft glow and floating cards, like a product shot. */}
           <div className="relative mx-auto aspect-square w-full max-w-[32rem]">
-            <div aria-hidden className="absolute inset-[9%] rounded-full bg-white/[0.06] ring-1 ring-white/10" style={depth(-8)} />
             <div aria-hidden className="absolute inset-[22%] rounded-full bg-primary/20 blur-[70px]" style={depth(-12)} />
             <div className="absolute inset-0 grid place-items-center" style={depth(6)}>
               <GlintBot size={330} wave className="max-w-full drop-shadow-2xl" label="Glint, waving hello" />

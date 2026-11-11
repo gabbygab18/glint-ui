@@ -47,7 +47,7 @@ export function CategoryShowcase({ categories }: { categories: ShowcaseCategory[
 
   return (
     <div>
-      <div role="tablist" aria-label="Categories" className="mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border bg-card p-1">
+      <div role="tablist" aria-label="Categories" className="mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border bg-card p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {categories.map((cat, k) => {
           const TabIcon = icons[cat.icon];
           const on = k === i;

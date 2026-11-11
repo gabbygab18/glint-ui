@@ -139,7 +139,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:py-24">
         <SectionTitle eyebrow="Categories" title="Everything that moves," accent="sorted for you" />
         <div className="mt-10">
           <CategoryShowcase categories={showcase} />

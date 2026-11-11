@@ -103,6 +103,11 @@ if (process.env.RESIZE) {
   await send("Emulation.setDeviceMetricsOverride", { width: rw, height: rh, deviceScaleFactor: 1, mobile: rw < 600 });
   await sleep(1500);
 }
+// EVAL=<js expression> runs in the page and prints the result (e.g. to find overflowing elements).
+if (process.env.EVAL) {
+  const r = await send("Runtime.evaluate", { expression: process.env.EVAL, returnByValue: true, awaitPromise: true });
+  console.log(JSON.stringify(r.result?.value ?? r.exceptionDetails?.text ?? r, null, 1));
+}
 // CLICK=x,y clicks once before the screenshot (e.g. to open a popover).
 if (process.env.CLICK) {
   const [x, y] = process.env.CLICK.split(",").map(Number);

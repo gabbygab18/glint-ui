@@ -54,7 +54,7 @@ export function Toc({ items }: { items: { id: string; label: string }[] }) {
 
 export function RightRail({ children }: { children: ReactNode }) {
   return (
-    <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-72 shrink-0 2xl:block">
+    <aside className="sticky top-20 hidden h-[calc(100dvh-5rem)] w-72 shrink-0 2xl:block">
       <ScrollArea className="h-full" viewportClassName="py-8">
         <div data-rail-content className="space-y-4">{children}</div>
       </ScrollArea>

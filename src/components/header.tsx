@@ -15,40 +15,50 @@ import { Tooltip } from "@/registry/items/tooltip/tooltip";
 /**
  * Site header. On the home page it lives inside the hero card (`inset`), so the
  * layout copy renders nothing there and the hero renders its own.
+ * Every page uses the same geometry: a bar inset 8/12px from the edges, like the
+ * hero card, so the logo and links don't shift when you change pages.
  */
 export function Header({ inset = false }: { inset?: boolean }) {
   const pathname = usePathname();
   if (!inset && pathname === "/") return null;
   return (
-    <header className={inset ? "relative z-40" : "sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl"}>
-      <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-6 px-4 sm:px-6">
-        <Link
-          href="/"
-          aria-label={`${SITE_NAME} home`}
-          className="flex items-center gap-2 font-display text-lg font-bold tracking-tight"
-        >
-          <Logo className="size-8 drop-shadow-[0_2px_6px_rgba(181,230,29,0.35)]" />
-          <span className="hidden min-[420px]:inline">{SITE_NAME}</span>
-        </Link>
-        <NavLinks />
-        <div className="ml-auto flex items-center gap-2">
-          <Search />
-          <Tooltip content="GitHub" side="bottom">
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              className={buttonVariants({ variant: "ghost", size: "icon", className: "hidden rounded-full text-muted-foreground sm:inline-flex" })}
-            >
-              <GitHubIcon className="size-5" />
-            </a>
-          </Tooltip>
-          <div className="hidden md:block">
-            <ThemeSwitch />
+    <header className={inset ? "relative z-40" : "sticky top-0 z-40 px-2 pt-2 sm:px-3 sm:pt-3"}>
+      <div
+        className={
+          inset
+            ? "border border-transparent"
+            : "rounded-[1.25rem] border bg-background/80 shadow-sm backdrop-blur-xl sm:rounded-[1.5rem]"
+        }
+      >
+        <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-6 px-4 sm:px-6">
+          <Link
+            href="/"
+            aria-label={`${SITE_NAME} home`}
+            className="flex items-center gap-2 font-display text-lg font-bold tracking-tight"
+          >
+            <Logo className="size-8 drop-shadow-[0_2px_6px_rgba(181,230,29,0.35)]" />
+            <span className="hidden min-[420px]:inline">{SITE_NAME}</span>
+          </Link>
+          <NavLinks />
+          <div className="ml-auto flex items-center gap-2">
+            <Search />
+            <Tooltip content="GitHub" side="bottom">
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className={buttonVariants({ variant: "ghost", size: "icon", className: "hidden rounded-full text-muted-foreground sm:inline-flex" })}
+              >
+                <GitHubIcon className="size-5" />
+              </a>
+            </Tooltip>
+            <div className="hidden md:block">
+              <ThemeSwitch />
+            </div>
+            <AuthButton />
+            <MobileMenu />
           </div>
-          <AuthButton />
-          <MobileMenu />
         </div>
       </div>
     </header>

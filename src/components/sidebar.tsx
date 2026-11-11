@@ -99,7 +99,7 @@ export function SidebarNav() {
 export function Sidebar() {
   return (
     <>
-      <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-64 shrink-0 lg:block">
+      <aside className="sticky top-20 hidden h-[calc(100dvh-5rem)] w-64 shrink-0 lg:block">
         <ScrollArea className="h-full" viewportClassName="overscroll-contain py-8 pr-4">
           <SidebarNav />
         </ScrollArea>
