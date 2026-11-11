@@ -24,5 +24,5 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except the teaser itself, Next internals, the shadcn registry, API routes and static files.
-  matcher: ["/((?!coming-soon|_next|r/|api/|icon\\.svg|mascots/|thumbs/|fonts/|robots\\.txt|sitemap\\.xml).*)"],
+  matcher: ["/((?!coming-soon|_next|r/|api/|search\\.json|icon\\.svg|mascots/|thumbs/|fonts/|robots\\.txt|sitemap\\.xml).*)"],
 };

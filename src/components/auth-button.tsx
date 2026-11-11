@@ -1,11 +1,11 @@
 "use client";
 
-import { signIn, signOut, supabase, useUser } from "@/lib/supabase";
+import { hasSupabase, signIn, signOut, useUser } from "@/lib/supabase";
 import { Button } from "@/registry/items/button/button";
 
 export function AuthButton() {
   const { user, loading } = useUser();
-  if (!supabase) return null;
+  if (!hasSupabase) return null;
   if (loading) return <div className="size-8 animate-pulse rounded-full bg-border" />;
 
   if (!user) {

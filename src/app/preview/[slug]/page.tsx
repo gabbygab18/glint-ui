@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PreviewStage } from "@/components/preview-stage";
-import { bySlug, registry } from "@/registry";
+import { bySlug, defaultProps, registry } from "@/registry";
 
 // Bare, full-viewport render of one demo. Used for "Open ↗" and thumbnail capture.
 export const dynamicParams = false;
@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: PageProps<"/preview/[slug]">)
 
 export default async function PreviewPage({ params }: PageProps<"/preview/[slug]">) {
   const { slug } = await params;
-  if (!bySlug.has(slug)) notFound();
-  return <PreviewStage slug={slug} />;
+  const entry = bySlug.get(slug);
+  if (!entry) notFound();
+  return <PreviewStage slug={slug} defaults={defaultProps(entry)} />;
 }

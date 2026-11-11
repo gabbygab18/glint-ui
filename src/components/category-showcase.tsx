@@ -74,7 +74,7 @@ export function CategoryShowcase({ categories }: { categories: ShowcaseCategory[
           >
             {lead && (
               // eslint-disable-next-line @next/next/no-img-element -- static thumbnail
-              <img src={`/thumbs/${lead.slug}.webp`} alt="" className="size-full object-cover" />
+              <img src={`/thumbs/${lead.slug}.webp`} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
             <div className="absolute inset-x-6 bottom-6 text-white">

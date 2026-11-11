@@ -38,3 +38,15 @@ export interface Meta {
 }
 
 export type RegistryEntry = Meta & { slug: string };
+
+/** The few fields list UIs need. Client components get these as props, never the full registry. */
+export type LiteEntry = Pick<RegistryEntry, "slug" | "name" | "category" | "description" | "isNew">;
+export type NavEntry = Pick<RegistryEntry, "slug" | "name" | "category" | "isNew">;
+
+export const categoryLabel = (id: Category) => CATEGORIES.find((c) => c.id === id)!.label;
+
+export function defaultProps(entry: Pick<RegistryEntry, "props">) {
+  return Object.fromEntries(
+    entry.props.filter((p) => p.default !== undefined).map((p) => [p.name, p.default]),
+  ) as Record<string, unknown>;
+}

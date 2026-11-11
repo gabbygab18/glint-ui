@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ComponentGrid, QuickNav } from "@/components/component-grid";
 import { PromoCard, RailCard, RightRail } from "@/components/right-rail";
-import { registry } from "@/registry";
+import { liteRegistry, registry } from "@/registry";
 
 export const metadata: Metadata = {
   title: "Components",
@@ -17,12 +17,12 @@ export default function ComponentsPage() {
           {registry.length} animated components across text, motion, backgrounds, UI and widgets. Copy the source or
           install one with the shadcn CLI.
         </p>
-        <ComponentGrid />
+        <ComponentGrid entries={liteRegistry} />
       </main>
       <RightRail>
         <PromoCard />
         <RailCard title="Quick navigation">
-          <QuickNav />
+          <QuickNav entries={liteRegistry} />
         </RailCard>
       </RightRail>
     </>

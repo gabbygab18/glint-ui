@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useFavorites } from "@/lib/favorites";
 import { useStats, track } from "@/lib/stats";
-import { signIn, supabase } from "@/lib/supabase";
+import { hasSupabase, signIn } from "@/lib/supabase";
 import { Heart } from "@/components/site-icons";
 import { Button } from "@/registry/items/button/button";
 
@@ -25,7 +25,7 @@ export function ComponentMeta({ slug }: { slug: string }) {
           {fmt.format(s.views)} views · {fmt.format(s.copies)} copies
         </span>
       )}
-      {supabase && (
+      {hasSupabase && (
         <Button
           variant={saved ? "secondary" : "outline"}
           size="sm"

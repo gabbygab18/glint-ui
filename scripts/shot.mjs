@@ -87,6 +87,13 @@ await send("Emulation.setDeviceMetricsOverride", { width: +w, height: +h, device
 // SCHEME=light|dark emulates the OS color scheme (the site theme follows it by default).
 if (process.env.SCHEME)
   await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value: process.env.SCHEME }] });
+// CSS="<rules>" injects a stylesheet before the page paints (e.g. to switch an effect off and compare).
+if (process.env.CSS)
+  await send("Page.addScriptToEvaluateOnNewDocument", {
+    source: `document.addEventListener("DOMContentLoaded",()=>{});(function(){const s=document.createElement("style");s.textContent=${JSON.stringify(process.env.CSS)};(document.head||document.documentElement).appendChild(s)})()`,
+  });
+// NOJS=1 loads the page with JavaScript off, to see what the server HTML alone costs.
+if (process.env.NOJS) await send("Emulation.setScriptExecutionDisabled", { value: true });
 await send("Page.navigate", { url });
 await sleep(+wait);
 if (mouse) {

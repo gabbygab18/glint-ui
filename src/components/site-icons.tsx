@@ -1,21 +1,23 @@
 import { useId, type SVGProps } from "react";
-import { BY_NAME, renderInner, type Variant } from "@/icons/render";
+import { SITE_ICONS } from "@/icons/site";
 
-// The website's own icons come from our icon set (src/icons, copied from the icons-website project),
-// drawn filled. Registry components keep lucide-react, since that is what people install with them.
+// The website's own icons, drawn filled, from our icon set (the icons-website project).
+// src/icons/site.ts holds only the icons listed below, pre-rendered: run `node scripts/gen-site-icons.mjs`
+// after adding one. Registry components keep lucide-react, since that is what people install with them.
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, "stroke"> {
   name: string;
-  variant?: Variant;
   /** Stroke width on the 24px grid. */
   strokeWidth?: number;
   size?: number | string;
 }
 
-export function Icon({ name, variant = "solid", strokeWidth = 2, size = "1em", ...props }: IconProps) {
+export function Icon({ name, strokeWidth = 2, size = "1em", ...props }: IconProps) {
   const id = `i${useId().replace(/[^\w-]/g, "")}`;
-  const def = BY_NAME.get(name);
-  if (!def) return null;
+  const markup = SITE_ICONS[name];
+  if (!markup) return null;
+  let html = markup.replaceAll("__ID__", id);
+  if (strokeWidth !== 2) html = html.replaceAll('stroke-width="2"', `stroke-width="${strokeWidth}"`);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +27,7 @@ export function Icon({ name, variant = "solid", strokeWidth = 2, size = "1em", .
       aria-hidden
       focusable="false"
       {...props}
-      dangerouslySetInnerHTML={{ __html: renderInner(def, { variant, stroke: strokeWidth, id }) }}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 }

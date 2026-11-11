@@ -2,25 +2,38 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { categoryLabel, registry } from "@/registry";
+import { categoryLabel, type LiteEntry } from "@/registry/types";
 import { Search as SearchIcon } from "@/components/site-icons";
 import { Button } from "@/registry/items/button/button";
 import { Input } from "@/registry/items/input/input";
 import { Kbd, KbdGroup } from "@/registry/items/kbd/kbd";
 import { ScrollArea } from "@/registry/items/scroll-area/scroll-area";
 
+// The component list is fetched once, the first time search is wanted (hover, focus or Ctrl K),
+// instead of riding along in every page's bundle. /search.json is static and cached.
+let index: Promise<LiteEntry[]> | undefined;
+const loadIndex = () => (index ??= fetch("/search.json").then((r) => r.json() as Promise<LiteEntry[]>));
+
 export function Search() {
   const dialog = useRef<HTMLDialogElement>(null);
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
+  const [entries, setEntries] = useState<LiteEntry[]>([]);
+
+  const warm = () => {
+    loadIndex().then(setEntries, () => {
+      index = undefined; // Let the next attempt retry after a network error.
+    });
+  };
 
   const q = query.trim().toLowerCase();
-  const results = registry.filter(
+  const results = entries.filter(
     (e) => !q || e.name.toLowerCase().includes(q) || e.description.toLowerCase().includes(q) || e.category.includes(q),
   );
 
   const open = () => {
+    warm();
     setQuery("");
     setActive(0);
     dialog.current?.showModal();
@@ -56,6 +69,8 @@ export function Search() {
         variant="outline"
         size="sm"
         onClick={open}
+        onPointerEnter={warm}
+        onFocus={warm}
         startIcon={<SearchIcon />}
         className="rounded-full text-muted-foreground hover:text-foreground max-sm:hidden sm:w-60 sm:justify-start"
       >
@@ -98,7 +113,7 @@ export function Search() {
         </div>
         <ScrollArea className="max-h-80" viewportClassName="max-h-80">
           <ul id="search-results" role="listbox" className="p-2">
-            {results.length === 0 && (
+            {entries.length > 0 && results.length === 0 && (
               <li className="px-3 py-8 text-center text-sm text-muted-foreground">No components match “{query}”.</li>
             )}
             {results.map((e, i) => (

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { CATEGORIES, registry, type Category, type RegistryEntry } from "@/registry";
+import { CATEGORIES, type Category, type LiteEntry } from "@/registry/types";
 import { useStats } from "@/lib/stats";
 import { Search as SearchIcon } from "@/components/site-icons";
 import { Badge } from "@/registry/items/badge/badge";
@@ -13,11 +13,11 @@ import { Pagination } from "@/registry/items/pagination/pagination";
 import { Select } from "@/registry/items/select/select";
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const letterOf = (e: RegistryEntry) => e.name[0].toUpperCase();
+const letterOf = (e: LiteEntry) => e.name[0].toUpperCase();
 const PAGE_SIZE = 24; // divisible by 1, 2 and 3 columns
 const LETTER_EVENT = "glint:letter";
 
-export function ComponentGrid() {
+export function ComponentGrid({ entries: registry }: { entries: LiteEntry[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "all">("all");
   const [sort, setSort] = useState<"az" | "popular">("az");
@@ -27,7 +27,7 @@ export function ComponentGrid() {
   const stats = useStats();
 
   const q = query.trim().toLowerCase();
-  const popularity = (e: RegistryEntry) => (stats?.[e.slug]?.views ?? 0) + (stats?.[e.slug]?.copies ?? 0) * 5;
+  const popularity = (e: LiteEntry) => (stats?.[e.slug]?.views ?? 0) + (stats?.[e.slug]?.copies ?? 0) * 5;
   const entries = registry
     .filter(
       (e) =>
@@ -66,7 +66,7 @@ export function ComponentGrid() {
     };
     window.addEventListener(LETTER_EVENT, onLetter);
     return () => window.removeEventListener(LETTER_EVENT, onLetter);
-  }, []);
+  }, [registry]);
 
   // Scroll once the page holding the letter has rendered.
   useEffect(() => {
@@ -178,7 +178,7 @@ export function ComponentGrid() {
   );
 }
 
-function Card({ entry: e }: { entry: RegistryEntry }) {
+function Card({ entry: e }: { entry: LiteEntry }) {
   const [broken, setBroken] = useState(false);
   return (
     <Link
@@ -219,7 +219,7 @@ function Card({ entry: e }: { entry: RegistryEntry }) {
   );
 }
 
-export function QuickNav() {
+export function QuickNav({ entries: registry }: { entries: LiteEntry[] }) {
   const available = new Set(registry.map(letterOf));
   return (
     <div className="grid grid-cols-7 gap-1 text-sm">

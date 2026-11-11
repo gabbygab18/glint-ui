@@ -71,7 +71,7 @@ export default async function ComponentPage({ params }: PageProps<"/components/[
           <Tabs
             label="Preview or code"
             tabs={[
-              { label: "Preview", content: <Playground slug={slug} /> },
+              { label: "Preview", content: <Playground slug={slug} props={entry.props} /> },
               { label: "Code", content: <CodeBlock code={source} slug={slug} /> },
             ]}
           />
@@ -118,10 +118,14 @@ export default async function ComponentPage({ params }: PageProps<"/components/[
                     </li>
                   )}
                   <li>
-                    <p className="mb-2">
-                      Copy the source into <code className="text-foreground">components/ui/{slug}.tsx</code>:
+                    {/* The source is already on the page (Code tab), so it is not highlighted a second time here. */}
+                    <p>
+                      Copy the source from the{" "}
+                      <a href="#preview" className="text-foreground underline underline-offset-4">
+                        Code tab
+                      </a>{" "}
+                      into <code className="text-foreground">components/ui/{slug}.tsx</code>.
                     </p>
-                    <CodeBlock code={source} slug={slug} />
                   </li>
                 </ol>
               ),

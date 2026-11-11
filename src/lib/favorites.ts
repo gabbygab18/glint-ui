@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { supabase, useUser } from "./supabase";
+import { getSupabase, hasSupabase, useUser } from "./supabase";
 
 const EMPTY = new Set<string>();
 
@@ -12,17 +12,19 @@ export function useFavorites() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!supabase || !user) return;
+    if (!hasSupabase || !user) return;
     let cancelled = false;
-    supabase
-      .from("favorites")
+    getSupabase().then((supabase) =>
+      supabase
+      ?.from("favorites")
       .select("slug")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error) setError(error.message);
         else setData({ userId: user.id, slugs: new Set(data.map((r) => r.slug as string)) });
-      });
+      }),
+    );
     return () => {
       cancelled = true;
     };
@@ -30,10 +32,11 @@ export function useFavorites() {
 
   const ready = !!user && data?.userId === user.id;
   const slugs = ready ? data.slugs : EMPTY;
-  const loading = userLoading || (!!supabase && !!user && !ready && !error);
+  const loading = userLoading || (hasSupabase && !!user && !ready && !error);
 
   const toggle = useCallback(
     async (slug: string) => {
+      const supabase = await getSupabase();
       if (!supabase || !user) return;
       const had = slugs.has(slug);
       // Optimistic: flip now, roll back if the write fails.

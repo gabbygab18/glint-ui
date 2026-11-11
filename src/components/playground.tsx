@@ -9,12 +9,13 @@ import { Input } from "@/registry/items/input/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/registry/items/popover/popover";
 import { Select } from "@/registry/items/select/select";
 import { Slider } from "@/registry/items/slider/slider";
-import { bySlug, defaultProps, type PropDef } from "@/registry";
+import { defaultProps, type PropDef } from "@/registry/types";
 import { ArrowUpRight, RotateCcw } from "@/components/site-icons";
 import { Button, buttonVariants } from "@/registry/items/button/button";
 
-export function Playground({ slug }: { slug: string }) {
-  const entry = bySlug.get(slug)!;
+/** `props` comes from the server page, so the browser only gets this one component's metadata. */
+export function Playground({ slug, props }: { slug: string; props: PropDef[] }) {
+  const entry = { props };
   const Demo = demos[slug];
   const [values, setValues] = useState(() => defaultProps(entry));
   const [run, setRun] = useState(0);

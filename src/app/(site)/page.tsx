@@ -238,7 +238,7 @@ export default function Home() {
                   style={{ transform: `translateY(${k * 26}px) scale(${1 - (2 - k) * 0.05})`, zIndex: k }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail */}
-                  <img src={`/thumbs/${e.slug}.webp`} alt="" className="aspect-[16/10] w-full rounded-[1.1rem] object-cover" />
+                  <img src={`/thumbs/${e.slug}.webp`} alt="" loading="lazy" decoding="async" className="aspect-[16/10] w-full rounded-[1.1rem] object-cover" />
                   <p className="flex items-center justify-between px-2 pt-2 text-sm font-semibold">
                     {e.name}
                     <span className="text-xs font-normal text-muted-foreground">{categoryLabel(e.category)}</span>
@@ -272,7 +272,7 @@ export default function Home() {
             <Link key={e.slug} href={`/components/${e.slug}`} className="clay-well group grid gap-5 rounded-[2rem] p-3 md:grid-cols-[260px_1fr]">
               <div className="relative aspect-video overflow-hidden rounded-2xl bg-[#0b0f08]">
                 {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail */}
-                <img src={`/thumbs/${e.slug}.webp`} alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src={`/thumbs/${e.slug}.webp`} alt="" loading="lazy" decoding="async" className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
               <div className="flex flex-col justify-between gap-4 py-2 pr-4">
                 <div>
