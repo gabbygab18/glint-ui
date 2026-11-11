@@ -35,6 +35,7 @@ import m_bleed_reveal from "../items/bleed-reveal/meta";
 import m_blind_light from "../items/blind-light/meta";
 import m_blob_lamp from "../items/blob-lamp/meta";
 import m_block_dissolve from "../items/block-dissolve/meta";
+import m_bloom_menu from "../items/bloom-menu/meta";
 import m_bob_shapes from "../items/bob-shapes/meta";
 import m_bolt_strike from "../items/bolt-strike/meta";
 import m_bracket_focus from "../items/bracket-focus/meta";
@@ -48,6 +49,7 @@ import m_cascade_list from "../items/cascade-list/meta";
 import m_charge_band from "../items/charge-band/meta";
 import m_checkbox from "../items/checkbox/meta";
 import m_checklist_cell from "../items/checklist-cell/meta";
+import m_chip_input from "../items/chip-input/meta";
 import m_chrome_pour from "../items/chrome-pour/meta";
 import m_cipher_reveal from "../items/cipher-reveal/meta";
 import m_clock from "../items/clock/meta";
@@ -88,12 +90,14 @@ import m_ellipse_photos from "../items/ellipse-photos/meta";
 import m_ember_cells from "../items/ember-cells/meta";
 import m_ember_path from "../items/ember-path/meta";
 import m_enter_view from "../items/enter-view/meta";
+import m_expand_search from "../items/expand-search/meta";
 import m_expandable_cards from "../items/expandable-cards/meta";
 import m_expandable_dock from "../items/expandable-dock/meta";
 import m_extrude_type from "../items/extrude-type/meta";
 import m_facescape from "../items/facescape/meta";
 import m_fancy_text from "../items/fancy-text/meta";
 import m_feature_showcase from "../items/feature-showcase/meta";
+import m_file_drop from "../items/file-drop/meta";
 import m_file_lift from "../items/file-lift/meta";
 import m_file_pocket from "../items/file-pocket/meta";
 import m_filings from "../items/filings/meta";
@@ -129,6 +133,7 @@ import m_glow_sphere from "../items/glow-sphere/meta";
 import m_glyph_hover from "../items/glyph-hover/meta";
 import m_glyph_spill from "../items/glyph-spill/meta";
 import m_glyph_storm from "../items/glyph-storm/meta";
+import m_goal_ring from "../items/goal-ring/meta";
 import m_god_rays from "../items/god-rays/meta";
 import m_goo_chaser from "../items/goo-chaser/meta";
 import m_goo_radio from "../items/goo-radio/meta";
@@ -149,6 +154,7 @@ import m_hover_shelf from "../items/hover-shelf/meta";
 import m_hud_type from "../items/hud-type/meta";
 import m_hue_folds from "../items/hue-folds/meta";
 import m_hyperlink from "../items/hyperlink/meta";
+import m_icon_shift from "../items/icon-shift/meta";
 import m_infinite_canvas from "../items/infinite-canvas/meta";
 import m_ink_fluid from "../items/ink-fluid/meta";
 import m_input from "../items/input/meta";
@@ -208,6 +214,7 @@ import m_neon_floor from "../items/neon-floor/meta";
 import m_night_fold from "../items/night-fold/meta";
 import m_north_glow from "../items/north-glow/meta";
 import m_not_found from "../items/not-found/meta";
+import m_nudge_field from "../items/nudge-field/meta";
 import m_number_ticker from "../items/number-ticker/meta";
 import m_odometer from "../items/odometer/meta";
 import m_oil_film from "../items/oil-film/meta";
@@ -234,16 +241,19 @@ import m_pixel_shock from "../items/pixel-shock/meta";
 import m_pop_check from "../items/pop-check/meta";
 import m_popover from "../items/popover/meta";
 import m_poster_stream from "../items/poster-stream/meta";
+import m_price_toggle from "../items/price-toggle/meta";
 import m_print_dots from "../items/print-dots/meta";
 import m_progress from "../items/progress/meta";
 import m_pull_hover from "../items/pull-hover/meta";
 import m_radial_flow from "../items/radial-flow/meta";
 import m_radial_socials from "../items/radial-socials/meta";
 import m_radio_group from "../items/radio-group/meta";
+import m_reaction_bar from "../items/reaction-bar/meta";
 import m_read_focus from "../items/read-focus/meta";
 import m_reasoning_trace from "../items/reasoning-trace/meta";
 import m_reel from "../items/reel/meta";
 import m_refract_panel from "../items/refract-panel/meta";
+import m_reorder_list from "../items/reorder-list/meta";
 import m_reveal_text from "../items/reveal-text/meta";
 import m_ring_pill from "../items/ring-pill/meta";
 import m_ring_switch from "../items/ring-switch/meta";
@@ -269,6 +279,8 @@ import m_shuffle_text from "../items/shuffle-text/meta";
 import m_shy_button from "../items/shy-button/meta";
 import m_signal_glitch from "../items/signal-glitch/meta";
 import m_signup_form from "../items/signup-form/meta";
+import m_size_shift from "../items/size-shift/meta";
+import m_skeleton_swap from "../items/skeleton-swap/meta";
 import m_slat_light from "../items/slat-light/meta";
 import m_slide_text from "../items/slide-text/meta";
 import m_slider from "../items/slider/meta";
@@ -295,6 +307,7 @@ import m_status from "../items/status/meta";
 import m_step_flow from "../items/step-flow/meta";
 import m_streak_rain from "../items/streak-rain/meta";
 import m_streamers from "../items/streamers/meta";
+import m_strength_field from "../items/strength-field/meta";
 import m_stretch_rail from "../items/stretch-rail/meta";
 import m_stretch_tabs from "../items/stretch-tabs/meta";
 import m_strip_delete from "../items/strip-delete/meta";
@@ -303,6 +316,7 @@ import m_stripe_button from "../items/stripe-button/meta";
 import m_striped_grid from "../items/striped-grid/meta";
 import m_surge_marquee from "../items/surge-marquee/meta";
 import m_swarm_word from "../items/swarm-word/meta";
+import m_swatch_picker from "../items/swatch-picker/meta";
 import m_sweep_line from "../items/sweep-line/meta";
 import m_sweep_menu from "../items/sweep-menu/meta";
 import m_sweep_scope from "../items/sweep-scope/meta";
@@ -339,6 +353,7 @@ import m_twine from "../items/twine/meta";
 import m_twinkle_card from "../items/twinkle-card/meta";
 import m_typewriter from "../items/typewriter/meta";
 import m_unblur_heading from "../items/unblur-heading/meta";
+import m_undo_bar from "../items/undo-bar/meta";
 import m_updraft_dust from "../items/updraft-dust/meta";
 import m_venom_beam from "../items/venom-beam/meta";
 import m_vercel_card from "../items/vercel-card/meta";
@@ -391,6 +406,7 @@ export const registry: RegistryEntry[] = [
   { slug: "blind-light", ...m_blind_light },
   { slug: "blob-lamp", ...m_blob_lamp },
   { slug: "block-dissolve", ...m_block_dissolve },
+  { slug: "bloom-menu", ...m_bloom_menu },
   { slug: "bob-shapes", ...m_bob_shapes },
   { slug: "bolt-strike", ...m_bolt_strike },
   { slug: "bracket-focus", ...m_bracket_focus },
@@ -404,6 +420,7 @@ export const registry: RegistryEntry[] = [
   { slug: "charge-band", ...m_charge_band },
   { slug: "checkbox", ...m_checkbox },
   { slug: "checklist-cell", ...m_checklist_cell },
+  { slug: "chip-input", ...m_chip_input },
   { slug: "chrome-pour", ...m_chrome_pour },
   { slug: "cipher-reveal", ...m_cipher_reveal },
   { slug: "clock", ...m_clock },
@@ -444,12 +461,14 @@ export const registry: RegistryEntry[] = [
   { slug: "ember-cells", ...m_ember_cells },
   { slug: "ember-path", ...m_ember_path },
   { slug: "enter-view", ...m_enter_view },
+  { slug: "expand-search", ...m_expand_search },
   { slug: "expandable-cards", ...m_expandable_cards },
   { slug: "expandable-dock", ...m_expandable_dock },
   { slug: "extrude-type", ...m_extrude_type },
   { slug: "facescape", ...m_facescape },
   { slug: "fancy-text", ...m_fancy_text },
   { slug: "feature-showcase", ...m_feature_showcase },
+  { slug: "file-drop", ...m_file_drop },
   { slug: "file-lift", ...m_file_lift },
   { slug: "file-pocket", ...m_file_pocket },
   { slug: "filings", ...m_filings },
@@ -485,6 +504,7 @@ export const registry: RegistryEntry[] = [
   { slug: "glyph-hover", ...m_glyph_hover },
   { slug: "glyph-spill", ...m_glyph_spill },
   { slug: "glyph-storm", ...m_glyph_storm },
+  { slug: "goal-ring", ...m_goal_ring },
   { slug: "god-rays", ...m_god_rays },
   { slug: "goo-chaser", ...m_goo_chaser },
   { slug: "goo-radio", ...m_goo_radio },
@@ -505,6 +525,7 @@ export const registry: RegistryEntry[] = [
   { slug: "hud-type", ...m_hud_type },
   { slug: "hue-folds", ...m_hue_folds },
   { slug: "hyperlink", ...m_hyperlink },
+  { slug: "icon-shift", ...m_icon_shift },
   { slug: "infinite-canvas", ...m_infinite_canvas },
   { slug: "ink-fluid", ...m_ink_fluid },
   { slug: "input", ...m_input },
@@ -564,6 +585,7 @@ export const registry: RegistryEntry[] = [
   { slug: "night-fold", ...m_night_fold },
   { slug: "north-glow", ...m_north_glow },
   { slug: "not-found", ...m_not_found },
+  { slug: "nudge-field", ...m_nudge_field },
   { slug: "number-ticker", ...m_number_ticker },
   { slug: "odometer", ...m_odometer },
   { slug: "oil-film", ...m_oil_film },
@@ -590,16 +612,19 @@ export const registry: RegistryEntry[] = [
   { slug: "pop-check", ...m_pop_check },
   { slug: "popover", ...m_popover },
   { slug: "poster-stream", ...m_poster_stream },
+  { slug: "price-toggle", ...m_price_toggle },
   { slug: "print-dots", ...m_print_dots },
   { slug: "progress", ...m_progress },
   { slug: "pull-hover", ...m_pull_hover },
   { slug: "radial-flow", ...m_radial_flow },
   { slug: "radial-socials", ...m_radial_socials },
   { slug: "radio-group", ...m_radio_group },
+  { slug: "reaction-bar", ...m_reaction_bar },
   { slug: "read-focus", ...m_read_focus },
   { slug: "reasoning-trace", ...m_reasoning_trace },
   { slug: "reel", ...m_reel },
   { slug: "refract-panel", ...m_refract_panel },
+  { slug: "reorder-list", ...m_reorder_list },
   { slug: "reveal-text", ...m_reveal_text },
   { slug: "ring-pill", ...m_ring_pill },
   { slug: "ring-switch", ...m_ring_switch },
@@ -625,6 +650,8 @@ export const registry: RegistryEntry[] = [
   { slug: "shy-button", ...m_shy_button },
   { slug: "signal-glitch", ...m_signal_glitch },
   { slug: "signup-form", ...m_signup_form },
+  { slug: "size-shift", ...m_size_shift },
+  { slug: "skeleton-swap", ...m_skeleton_swap },
   { slug: "slat-light", ...m_slat_light },
   { slug: "slide-text", ...m_slide_text },
   { slug: "slider", ...m_slider },
@@ -651,6 +678,7 @@ export const registry: RegistryEntry[] = [
   { slug: "step-flow", ...m_step_flow },
   { slug: "streak-rain", ...m_streak_rain },
   { slug: "streamers", ...m_streamers },
+  { slug: "strength-field", ...m_strength_field },
   { slug: "stretch-rail", ...m_stretch_rail },
   { slug: "stretch-tabs", ...m_stretch_tabs },
   { slug: "strip-delete", ...m_strip_delete },
@@ -659,6 +687,7 @@ export const registry: RegistryEntry[] = [
   { slug: "striped-grid", ...m_striped_grid },
   { slug: "surge-marquee", ...m_surge_marquee },
   { slug: "swarm-word", ...m_swarm_word },
+  { slug: "swatch-picker", ...m_swatch_picker },
   { slug: "sweep-line", ...m_sweep_line },
   { slug: "sweep-menu", ...m_sweep_menu },
   { slug: "sweep-scope", ...m_sweep_scope },
@@ -695,6 +724,7 @@ export const registry: RegistryEntry[] = [
   { slug: "twinkle-card", ...m_twinkle_card },
   { slug: "typewriter", ...m_typewriter },
   { slug: "unblur-heading", ...m_unblur_heading },
+  { slug: "undo-bar", ...m_undo_bar },
   { slug: "updraft-dust", ...m_updraft_dust },
   { slug: "venom-beam", ...m_venom_beam },
   { slug: "vercel-card", ...m_vercel_card },

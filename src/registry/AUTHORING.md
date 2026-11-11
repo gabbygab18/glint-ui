@@ -13,12 +13,13 @@ items/<slug>/
 `src/registry/generated/*`. Never edit generated files by hand.
 
 Study these existing items before writing: `letter-rise`, `pin-matrix`, `mote-field`,
-`magnet`, `dock`, `glow-border`, `calamansi`.
+`pull-hover`, `hover-shelf`, `glow-border`, `calamansi`.
 
 ## Hard rules
 
 1. **Original code only.** Do NOT open, fetch or copy source code from reactbits.dev,
-   github.com/DavidHDev/react-bits, scrollxui.dev or github.com/Adityakishore0/ScrollX-UI.
+   github.com/DavidHDev/react-bits, scrollxui.dev, github.com/Adityakishore0/ScrollX-UI
+   or transitions.dev, and do not reuse their component names.
    Their licenses forbid redistribution. Build every effect from scratch from the
    idea you are given. Exception: Calamansi UI (github.com/fujiDevv/calamansi-ui) is
    MIT; you may port its code if you keep an attribution comment and set `credit` in meta.
