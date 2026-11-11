@@ -1,4 +1,4 @@
-import { Box } from "lucide-react";
+import { Box } from "@/components/site-icons";
 import type { CSSProperties } from "react";
 import { STACK } from "./stack-logos";
 

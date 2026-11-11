@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Box, ChevronDown, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "lucide-react";
+import { BookOpen, Box, ChevronDown, Layers, LayoutGrid, MousePointerClick, Smile, Sparkles, Type, Zap } from "@/components/site-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CATEGORIES, registry } from "@/registry";

@@ -65,8 +65,9 @@ export function GoalRing({
 
   return (
     <MotionConfig reducedMotion="user">
-      <div ref={ref} className={cn("inline-grid justify-items-center gap-5", className)}>
-        <div className="relative" style={{ width: size, height: size }}>
+      <div ref={ref} className={cn("grid max-w-full justify-items-center gap-5", className)}>
+        {/* Shrinks with its container; the SVG scales through its viewBox. */}
+        <div className="relative aspect-square max-w-full" style={{ width: size, containerType: "inline-size" }}>
           <svg viewBox={`0 0 ${size} ${size}`} className="size-full -rotate-90" aria-hidden>
             {rings.map((r, i) => {
               const radius = c - thickness / 2 - i * (thickness + gap);
@@ -94,7 +95,9 @@ export function GoalRing({
           </svg>
           {lead && (
             <div className="absolute inset-0 grid place-content-center text-center">
-              <motion.span className="text-3xl font-bold tabular-nums text-foreground">{shown}</motion.span>
+              <motion.span className="font-bold tabular-nums text-foreground" style={{ fontSize: "max(18px, 15cqw)" }}>
+                {shown}
+              </motion.span>
               <span className="text-xs text-muted-foreground">{lead.label}</span>
             </div>
           )}

@@ -1,16 +1,11 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Box, Check, Layers, Sparkles, Terminal, Type } from "@/components/site-icons";
 import Link from "next/link";
 import { useRef, type CSSProperties, type PointerEvent } from "react";
-import { Tally } from "@/registry/items/tally/tally";
-import { CipherReveal } from "@/registry/items/cipher-reveal/cipher-reveal";
-import { PinMatrix } from "@/registry/items/pin-matrix/pin-matrix";
 import { GlintBot } from "@/registry/items/glint-bot/glint-bot";
-import { PullHover } from "@/registry/items/pull-hover/pull-hover";
-import { WordCycle } from "@/registry/items/word-cycle/word-cycle";
-import { CopyButton } from "./copy-button";
 import { buttonVariants } from "@/registry/items/button/button";
+import { Header } from "./header";
 
 // Floating cards drift against the pointer at different depths.
 const depth = (px: number): CSSProperties => ({
@@ -18,130 +13,148 @@ const depth = (px: number): CSSProperties => ({
   transition: "transform 0.4s cubic-bezier(.2,.7,.2,1)",
 });
 
-export function Hero({ count, installCmd }: { count: number; installCmd: string }) {
-  const ref = useRef<HTMLElement>(null);
+// A few lit grid cells, placed on the 64px grid so they line up with the lines.
+const CELLS = [
+  [3, 1],
+  [12, 1],
+  [14, 2],
+  [8, 6],
+  [17, 7],
+  [1, 8],
+];
 
-  const onMove = (e: PointerEvent<HTMLElement>) => {
+const TRUST = ["One file per component", "Works with the shadcn CLI", "Free and open source"];
+
+export function Hero({ count, categories }: { count: number; categories: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
     const el = ref.current!;
     const r = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
     el.style.setProperty("--px", `${((e.clientX - r.left) / r.width - 0.5) * 2}`);
     el.style.setProperty("--py", `${((e.clientY - r.top) / r.height - 0.5) * 2}`);
   };
 
   return (
-    <section ref={ref} onPointerMove={onMove} className="relative isolate overflow-hidden border-b">
-      {/* Interactive backdrop: dot field + a spotlight that follows the pointer. */}
-      <div aria-hidden className="absolute inset-0 -z-10 opacity-70">
-        <PinMatrix gap={26} dotSize={1.4} baseColor="#8a8f7e" activeColor="#b5e61d" proximity={160} />
-      </div>
+    <section className="px-2 pt-2 sm:px-3 sm:pt-3">
+      {/* The card is always dark, like a brand-colored panel, in both site themes. */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        ref={ref}
+        onPointerMove={onMove}
+        className="dark relative isolate overflow-hidden rounded-[1.75rem] text-foreground sm:rounded-[2.25rem]"
         style={{
           background:
-            "radial-gradient(520px circle at var(--mx, 70%) var(--my, 30%), color-mix(in oklch, var(--primary) 16%, transparent), transparent 70%)",
+            "radial-gradient(900px circle at 78% 18%, oklch(0.42 0.12 128 / 0.55), transparent 60%), radial-gradient(700px circle at 8% 100%, oklch(0.32 0.07 150 / 0.5), transparent 60%), linear-gradient(160deg, oklch(0.23 0.035 128), oklch(0.16 0.02 125))",
         }}
-      />
-      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-background" />
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, oklch(1 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, oklch(1 0 0 / 0.05) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        >
+          {CELLS.map(([x, y]) => (
+            <span key={`${x}-${y}`} className="absolute size-16 bg-white/[0.035]" style={{ left: x * 64, top: y * 64 }} />
+          ))}
+        </div>
 
-      <div className="mx-auto grid max-w-[90rem] items-center gap-12 px-6 pb-20 pt-16 sm:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:pb-28">
-        <div className="min-w-0">
-          <Link
-            href="/components"
-            className="group inline-flex items-center gap-2 rounded-full border bg-card/70 py-1 pl-1 pr-3 text-xs backdrop-blur"
-          >
-            <span className="rounded-full bg-primary px-2 py-0.5 font-semibold text-primary-foreground">New</span>
-            <span className="text-muted-foreground group-hover:text-foreground">Text, cursor and WebGL effects</span>
-            <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+        <Header inset />
 
-          <h1 className="mt-7 font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
-            Interfaces that
-            <br />
-            <WordCycle words={["move.", "glow.", "react.", "feel alive."]} interval={2200} className="pb-[0.12em] pt-[0.04em] leading-[1.1] text-primary" />
-          </h1>
+        <div className="mx-auto grid max-w-[90rem] items-center gap-10 px-6 pb-16 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:pb-20">
+          <div className="min-w-0">
+            <Link
+              href="/components"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] py-1 pl-1 pr-3 text-xs text-white/80 backdrop-blur hover:text-white"
+            >
+              <span className="rounded-full bg-primary px-2 py-0.5 font-semibold text-primary-foreground">{count}</span>
+              animated components for <span className="font-semibold text-white">React</span>
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </Link>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            {count} animated React components: text effects, cursors, WebGL backgrounds, UI and mascots. Copy one,
-            paste it, make it yours.
-          </p>
+            <h1 className="mt-7 max-w-2xl text-balance font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl xl:text-7xl">
+              Interfaces that move, <span className="text-primary">yours in one paste</span>
+            </h1>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <PullHover padding={40} strength={6}>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70">
+              Text effects, cursors, WebGL backgrounds, UI and mascots. Pick one, install it with the shadcn CLI, and
+              the code lives in your project.
+            </p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 href="/components"
-                className={buttonVariants({ size: "lg", className: "group rounded-full px-7 text-sm font-semibold shadow-[0_8px_30px_-8px_var(--primary)]" })}
+                className={buttonVariants({ size: "lg", className: "group rounded-full px-7 text-sm font-semibold shadow-[0_10px_30px_-10px_var(--primary)]" })}
               >
                 Browse components
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
-            </PullHover>
-            <Link
-              href="/docs/installation"
-              className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full bg-card/60 px-7 text-sm backdrop-blur" })}
+              <Link
+                href="/docs/installation"
+                className="inline-flex h-10 items-center rounded-full border border-white/25 px-7 text-sm font-semibold text-white transition-colors hover:bg-white/10 sm:h-11"
+              >
+                Get started
+              </Link>
+            </div>
+
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
+              {TRUST.map((t) => (
+                <li key={t} className="flex items-center gap-2">
+                  <span className="grid size-4 place-items-center rounded-full bg-primary text-primary-foreground">
+                    <Check className="size-2.5" strokeWidth={4} />
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Glint on a halo, with floating cards like a product shot. */}
+          <div className="relative mx-auto aspect-square w-full max-w-[32rem]">
+            <div aria-hidden className="absolute inset-[9%] rounded-full bg-white/[0.06] ring-1 ring-white/10" style={depth(-8)} />
+            <div aria-hidden className="absolute inset-[22%] rounded-full bg-primary/20 blur-[70px]" style={depth(-12)} />
+            <div className="absolute inset-0 grid place-items-center" style={depth(6)}>
+              <GlintBot size={330} wave className="max-w-full drop-shadow-2xl" label="Glint, waving hello" />
+            </div>
+
+            <div
+              className="absolute right-0 top-[6%] flex items-center gap-3 rounded-2xl bg-white px-3.5 py-2.5 text-neutral-900 shadow-2xl"
+              style={depth(18)}
             >
-              Get started
-            </Link>
+              <span className="flex -space-x-2">
+                {[
+                  { Icon: Type, bg: "bg-[#b5e61d]" },
+                  { Icon: Sparkles, bg: "bg-[#38bdf8]" },
+                  { Icon: Layers, bg: "bg-[#f59e0b]" },
+                  { Icon: Box, bg: "bg-[#a78bfa]" },
+                ].map(({ Icon, bg }, i) => (
+                  <span key={i} className={`grid size-7 place-items-center rounded-full ring-2 ring-white ${bg}`}>
+                    <Icon className="size-3.5 text-neutral-900" />
+                  </span>
+                ))}
+              </span>
+              <span className="leading-tight">
+                <span className="block text-sm font-bold">{count}+ components</span>
+                <span className="block text-[11px] text-neutral-500">{categories} categories</span>
+              </span>
+            </div>
+
+            <div
+              className="absolute bottom-[8%] left-0 flex items-center gap-3 rounded-2xl bg-white py-2.5 pl-2.5 pr-3 text-neutral-900 shadow-2xl"
+              style={depth(-22)}
+            >
+              <span className="grid size-8 place-items-center rounded-xl bg-[#141a0f] text-[#d9ff6b]">
+                <Terminal className="size-4" />
+              </span>
+              <span className="leading-tight">
+                <span className="block text-[11px] text-neutral-500">Installed</span>
+                <span className="block font-mono text-xs font-semibold">@glint-ui/frost-tiles</span>
+              </span>
+              <span className="ml-2 rounded-full bg-[#ecfccb] px-2 py-0.5 text-[10px] font-semibold text-[#3f6212]">Just now</span>
+            </div>
           </div>
-
-          <div className="mt-8 flex max-w-xl items-center gap-3 rounded-2xl border bg-card/70 py-2 pl-4 pr-2 font-mono text-[13px] backdrop-blur">
-            <span className="text-primary">$</span>
-            <span className="min-w-0 truncate text-muted-foreground">{installCmd}</span>
-            <CopyButton value={installCmd} className="ml-auto shrink-0" />
-          </div>
-
-          <dl className="mt-10 flex gap-10">
-            {[
-              { value: count, label: "components" },
-              { value: 8, label: "categories" },
-              { value: 0, label: "lock-in" },
-            ].map((s) => (
-              <div key={s.label}>
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="font-display text-3xl font-bold">
-                  <Tally to={s.value} duration={1600} />
-                </dd>
-                <dd className="text-sm text-muted-foreground">{s.label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        {/* Live stage: every piece here is a real component from the registry. */}
-        <div className="relative mx-auto aspect-square w-full max-w-[34rem]">
-          <div
-            aria-hidden
-            className="absolute inset-[12%] rounded-full bg-primary/25 blur-[80px]"
-            style={depth(-10)}
-          />
-          <div className="absolute inset-0 grid place-items-center" style={depth(8)}>
-            <GlintBot size={340} className="max-w-full drop-shadow-2xl" />
-          </div>
-
-          <div className="absolute left-0 top-[8%] rounded-2xl border bg-card/80 px-4 py-3 shadow-xl backdrop-blur" style={depth(-22)}>
-            <p className="text-[11px] text-muted-foreground">Cipher Reveal</p>
-            <CipherReveal text="hover to decrypt" trigger="hover" className="font-mono text-sm text-primary" />
-          </div>
-
-          <div className="absolute bottom-[10%] left-[2%] rounded-2xl border bg-card/80 px-4 py-3 shadow-xl backdrop-blur" style={depth(-30)}>
-            <p className="text-[11px] text-muted-foreground">Tally</p>
-            <p className="font-display text-2xl font-bold">
-              +<Tally to={count} duration={2400} />
-            </p>
-          </div>
-
-          <div className="absolute right-0 top-[20%] rounded-2xl border bg-card/80 p-3 shadow-xl backdrop-blur" style={depth(26)}>
-            <p className="mb-2 text-[11px] text-muted-foreground">Pull Hover</p>
-            <PullHover padding={50} strength={2.5}>
-              <span className="block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background">Pull me</span>
-            </PullHover>
-          </div>
-
-          <p className="absolute inset-x-0 bottom-0 text-center text-xs text-muted-foreground">
-            Boop it · drag side to side to pet · poke it five times
-          </p>
         </div>
       </div>
     </section>

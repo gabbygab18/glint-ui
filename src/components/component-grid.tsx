@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CATEGORIES, registry, type Category, type RegistryEntry } from "@/registry";
 import { useStats } from "@/lib/stats";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon } from "@/components/site-icons";
 import { Badge } from "@/registry/items/badge/badge";
 import { Button } from "@/registry/items/button/button";
 import { Input } from "@/registry/items/input/input";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
+import { Check, Copy } from "@/components/site-icons";
 import { useState } from "react";
 import { Button } from "@/registry/items/button/button";
 import { useToast } from "@/registry/items/toast/toast";

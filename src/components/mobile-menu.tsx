@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Search as SearchIcon } from "lucide-react";
+import { Menu, Search as SearchIcon } from "@/components/site-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";

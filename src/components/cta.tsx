@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/site-icons";
 import Link from "next/link";
 import type { PointerEvent } from "react";
 import { GITHUB_URL } from "@/lib/site";

@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/registry/items/popove
 import { Select } from "@/registry/items/select/select";
 import { Slider } from "@/registry/items/slider/slider";
 import { bySlug, defaultProps, type PropDef } from "@/registry";
-import { ArrowUpRight, RotateCcw } from "lucide-react";
+import { ArrowUpRight, RotateCcw } from "@/components/site-icons";
 import { Button, buttonVariants } from "@/registry/items/button/button";
 
 export function Playground({ slug }: { slug: string }) {

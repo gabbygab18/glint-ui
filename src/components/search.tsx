@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { categoryLabel, registry } from "@/registry";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon } from "@/components/site-icons";
 import { Button } from "@/registry/items/button/button";
 import { Input } from "@/registry/items/input/input";
 import { Kbd, KbdGroup } from "@/registry/items/kbd/kbd";

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useFavorites } from "@/lib/favorites";
 import { useStats, track } from "@/lib/stats";
 import { signIn, supabase } from "@/lib/supabase";
-import { Heart } from "lucide-react";
+import { Heart } from "@/components/site-icons";
 import { Button } from "@/registry/items/button/button";
 
 const fmt = new Intl.NumberFormat("en", { notation: "compact" });

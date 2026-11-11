@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { AuthButton } from "./auth-button";
 import { GitHubIcon, Logo } from "./icons";
@@ -11,9 +12,15 @@ import { ThemeSwitch } from "./theme-switch";
 import { buttonVariants } from "@/registry/items/button/button";
 import { Tooltip } from "@/registry/items/tooltip/tooltip";
 
-export function Header() {
+/**
+ * Site header. On the home page it lives inside the hero card (`inset`), so the
+ * layout copy renders nothing there and the hero renders its own.
+ */
+export function Header({ inset = false }: { inset?: boolean }) {
+  const pathname = usePathname();
+  if (!inset && pathname === "/") return null;
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+    <header className={inset ? "relative z-40" : "sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl"}>
       <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-6 px-4 sm:px-6">
         <Link
           href="/"

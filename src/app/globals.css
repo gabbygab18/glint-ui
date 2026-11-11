@@ -23,6 +23,8 @@
   --border: oklch(0.91 0.005 110);
   --input: oklch(0.91 0.005 110);
   --ring: oklch(0.72 0.19 128);
+  /* Accent words in headings: a deeper lime that stays readable on light backgrounds. */
+  --highlight: oklch(0.58 0.17 131);
 }
 
 .dark {
@@ -44,6 +46,7 @@
   --border: oklch(1 0 0 / 0.09);
   --input: oklch(1 0 0 / 0.12);
   --ring: oklch(0.91 0.2 125);
+  --highlight: oklch(0.91 0.2 125);
 }
 
 @theme inline {
@@ -65,6 +68,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-highlight: var(--highlight);
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
@@ -129,6 +133,15 @@
 }
 .dark .code span {
   color: var(--shiki-dark);
+}
+
+/* Faint square grid behind sections, fading out toward the edges. */
+.grid-lines {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
 }
 
 /* Film grain for CTA / hero surfaces. */
