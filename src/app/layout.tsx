@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist_Mono, Poppins } from "next/font/google";
 import localFont from "next/font/local";
@@ -28,7 +29,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="flex min-h-dvh flex-col bg-[var(--page)] font-sans text-foreground">{children}</body>
+      <body className="flex min-h-dvh flex-col bg-[var(--page)] font-sans text-foreground">
+        {children}
+        {/* Page views and unique visitors, shown in the Vercel dashboard (Analytics tab). No cookies. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

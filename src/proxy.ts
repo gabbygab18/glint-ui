@@ -23,6 +23,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except the teaser itself, Next internals, the shadcn registry, API routes and static files.
-  matcher: ["/((?!coming-soon|_next|r/|api/|search\\.json|icon\\.svg|mascots/|thumbs/|fonts/|robots\\.txt|sitemap\\.xml).*)"],
+  // Everything except the teaser itself, Next internals, Vercel Analytics, the shadcn registry, API routes and static files.
+  matcher: ["/((?!coming-soon|_next|_vercel|r/|api/|search\\.json|icon\\.svg|mascots/|thumbs/|fonts/|robots\\.txt|sitemap\\.xml).*)"],
 };
